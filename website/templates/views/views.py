@@ -4,7 +4,7 @@ from flask_login import login_required
 from website.models import *
 from website.templates.views.process_views import *
 from datetime import datetime, timedelta
-from website import db, photos
+from website import db
 from sqlalchemy.sql import func
 import datetime, flask_login, json
 from dateutil.relativedelta import relativedelta
@@ -58,7 +58,6 @@ def profile():
         profile.email = request.form.get('email')
         profile.username = request.form.get('un')
         profile.password = request.form.get('pw')
-        filename = photos.save(request.files['avatar'])
         profile.avatar_filename = filename
         db.session.commit()
 
