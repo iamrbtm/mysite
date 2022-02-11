@@ -1,0 +1,44 @@
+{% extends "menu/menu-div.html" %}
+
+{% block style %}
+{% endblock %}
+
+{% block title %}
+Guill Menu - Add Recipe
+{% endblock %}
+
+{% block proheader %}
+Add New Recipe
+{% endblock %}
+
+{% block content %}
+<form action="/menu/recipe/new" method="POST">
+  <div class="container">
+    <div class="row">
+      <div class="col-6" id="Picture and Information">
+        <div style="margin: auto">
+          <label for="dishName" style="width: 500px;">Dish Name</label>
+          <input type="text" style="width: 500px;" name="dishName" class="form-control" required>
+        </div>
+        <img src="https://image.shutterstock.com/image-vector/ui-image-placeholder-wireframes-apps-260nw-1037719204.jpg"
+        class='img-fluid rounded-start' alt="Picture Of Dish" width='400'>
+        <div>
+        <label for="picurl">Picture URL</label>
+        <input type="text" name="picurl" class="form-control" required>
+      </div>
+        <br>
+        <label for="servings">Servings</label>
+        <input type="text" name="servings" class="form-control" value=1>
+        <label for="servingSize">Serving Size</label>
+        <input type="text" name="servingSize" class="form-control" value="1">
+        <br>
+        <label for="prepTime">Prep Time</label>
+        <input type="text" name="prepTime" class="form-control">
+        <label for="cooktime">Cook Time</label>
+        <input type="text" name="cooktime" class="form-control">
+        <label for="cookTemp">Cook Time</label>
+        <input type="text" name="cookTemp" class="form-control">
+        <button class="btn btn-primary" type="submit">Save</button>
+</form>
+</div>
+{% endblock %}

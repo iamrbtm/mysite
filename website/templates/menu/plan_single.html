@@ -1,0 +1,267 @@
+{% extends "menu/menu-div.html" %}
+
+{% block title %}
+Dinner
+{% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item btn" data-toggle="modal" data-target="#MovePlan">Move Plan to...</a>
+<a class="dropdown-item btn" data-toggle="modal" data-target="#CopyPlan">Copy Plan to...</a>
+<div class="dropdown-divider"></div>
+<a class="dropdown-item btn" href="{{url_for('menu.plan_delete', id=plan.id)}}">Clear Plan</a>
+<a class="dropdown-item btn" href="#">Print</a>
+<a class="dropdown-item btn" href="#">Email</a>
+{% endblock %}
+
+{% block extra_menu_items %}
+{% endblock extra_menu_items %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 shadow p-3 mb-2 bg-light rounded">
+            <div class="d-flex">
+                <div class="p-2">
+                    <h4>
+                        {{plan.date.strftime('%A, %B %d, %Y')}}
+                        {% for holiday in holidays  %}
+                        {% if holiday.date.strftime('%Y%m%d') == plan.date.strftime('%Y%m%d') %}
+                            <span class="text-info"> - {{holiday.holiday}}</span>
+                            {% endif %}
+                            {% endfor %}
+                    </h4>
+                </div>
+                <div class="ml-auto p-1">
+                    <a href="{{url_for('menu.menu_prev', id=plan.id)}}"><button class="btn btn-secondary"><</button></a>
+                    <a href="{{url_for('menu.menu_next', id=plan.id)}}"><button class="btn btn-secondary">></button></a>
+                </div>
+            </div>
+
+            <form action="{{url_for('menu.menu_single', id=plan.id)}}" method="post">
+                <table class="table table-responsive">
+                    <thead>
+                        <th class="col">Main Dish</th>
+                        <th class="col">Side Dish</th>
+                        <th class="col">Beverages</th>
+                        <th class="col">Dessert</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                {% for pd in planDish %}
+                                {% if pd.mainidfk %}
+
+                                {% for dish in dishes %}
+                                {% if pd.mainidfk == dish.id %}
+                                <a class="text-decoration-none text-black" href="{{url_for('menu.recipe_single', id=dish.id)}}">{{dish.name}}</a><br>
+
+                                <span class="small">
+                                    {% set carbs = {'value': 0.00} %}
+                                    {% for rec in reciepes %}
+                                    {% if rec.dishfk == pd.mainidfk %}
+                                    {% if carbs.update({"value": ((rec.carb_total|float - rec.carb_fiber|float)/dish.numServings|int) + carbs.value|float }) %}{% endif %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    Carbs: {{'%0.2f' % carbs.value|float}}g <br>
+                                    {% endif %}{% endfor %}
+                                </span>
+
+                                {% if not loop.last %}
+                                <br>
+                                {% endif %}
+
+                                {% endif %}{% endfor %}
+                            </td>
+                            <td>
+                                {% for pd in planDish %}
+                                {% if pd.sideidfk %}
+
+                                {% for dish in dishes %}
+                                {% if pd.sideidfk == dish.id %}
+                                <a class="text-decoration-none text-black" href="{{url_for('menu.recipe_single', id=dish.id)}}">{{dish.name}}</a><br>
+
+                                <span class="small">
+                                    {% set carbs = {'value': 0.00} %}
+                                    {% for rec in reciepes %}
+                                    {% if rec.dishfk == pd.sideidfk %}
+                                    {% if carbs.update({"value": ((rec.carb_total|float - rec.carb_fiber|float)/dish.numServings|int) + carbs.value|float }) %}{% endif %}
+                                    {% endif %}{% endfor %}
+                                    Carbs: {{'%0.2f' % carbs.value|float}}g <br>
+                                    {% endif %}{% endfor %}
+                                </span>
+
+                                {% if not loop.last %}
+                                <br>
+                                {% endif %}
+
+                                {% endif %}{% endfor %}
+                            </td>
+                            <td>
+                                {% for pd in planDish %}
+                                {% if pd.drinkidfk %}
+
+                                {% for dish in dishes %}
+                                {% if pd.drinkidfk == dish.id %}
+                                <a class="text-decoration-none text-black" href="{{url_for('menu.recipe_single', id=dish.id)}}">{{dish.name}}</a><br>
+
+                                <span class="small">
+                                    {% set carbs = {'value': 0.00} %}
+                                    {% for rec in reciepes %}
+                                    {% if rec.dishfk == pd.drinkidfk %}
+                                    {% if carbs.update({"value": ((rec.carb_total|float - rec.carb_fiber|float)/dish.numServings|int) + carbs.value|float }) %}{% endif %}
+                                    {% endif %}{% endfor %}
+                                    Carbs: {{'%0.2f' % carbs.value|float}}g <br>
+                                    {% endif %}{% endfor %}
+                                </span>
+
+                                {% if not loop.last %}
+                                <br>
+                                {% endif %}
+
+                                {% endif %}{% endfor %}
+                            </td>
+                            <td>
+                                {% for pd in planDish %}
+                                {% if pd.dessertidfk %}
+
+                                {% for dish in dishes %}
+                                {% if pd.dessertidfk == dish.id %}
+                                <a class="text-decoration-none text-black" href="{{url_for('menu.recipe_single', id=dish.id)}}">{{dish.name}}</a><br>
+
+                                <span class="small">
+                                    {% set carbs = {'value': 0.00} %}
+                                    {% for rec in reciepes %}
+                                    {% if rec.dishfk == pd.dessertidfk %}
+                                    {% if carbs.update({"value": ((rec.carb_total|float - rec.carb_fiber|float)/dish.numServings|int) + carbs.value|float }) %}{% endif %}
+                                    {% endif %}{% endfor %}
+                                    Carbs: {{'%0.2f' % carbs.value|float}}g <br>
+                                    {% endif %}{% endfor %}
+                                </span>
+
+                                {% if not loop.last %}
+                                <br>
+                                {% endif %}
+
+                                {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="col selectpicker" name="maindish" id="maindish" multiple>
+                                    <option value="" disabled>Add A Main Dish</option>
+                                    <optgroup label="Main Dishes">
+                                        {% for dish in mains %}
+                                        <option value="{{dish.id}}">{{dish.name}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="All Dishes">
+                                        {% for dish in dishes %}
+                                        <option value="{{dish.id}}">{{dish.name}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="col selectpicker" name="sidedish" id="sidedish" multiple>
+                                    <option value="" disabled>Add A Side Dish</option>
+                                    <optgroup label="Sides">
+                                        {% for dish in sides %}
+                                        <option value="{{dish.id}}">{{dish.name}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="All Dishes">
+                                        {% for dish in dishes %}
+                                        <option value="{{dish.id}}">{{dish.name}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="col selectpicker" name="beverage" id="beverage" multiple>
+                                    <option value="" disabled>Add A Beverage</option>
+                                    <optgroup label="Beverages">
+                                        {% for dish in drinks %}
+                                        <option value="{{dish.id}}">{{dish.name}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="All Dishes">
+                                        {% for dish in dishes %}
+                                        <option value="{{dish.id}}">{{dish.name}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="col-1-sm selectpicker" name="dessert" id="dessert" multiple>
+                                    <option value="" disabled>Add A Dessert</option>
+                                    <optgroup label="Desserts">
+                                        {% for dish in desserts %}
+                                        <option value="{{dish.id}}">{{dish.name}}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                    <optgroup label="All Dishes">
+                                        {% for dish in dishes %}
+                                        <option value="{{dish.id}}">{{dish.name}}</option>
+                                        {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input class="btn btn-primary col-2-sm " type="submit" name="sub" value="Submit">
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Move Plan -->
+<!-- Modal -->
+<div class="modal fade" id="MovePlan" tabindex="-1" role="dialog" aria-labelledby="MoveID" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Move Plan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('menu.plan_move', id=plan.id)}}" method="post">
+                    <label class="form-label" for="moveto">Move to What Date</label>
+                    <input class="form-control" type="date" name="moveto" id="moveto">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Copy Plan -->
+<!-- Modal -->
+<div class="modal fade" id="CopyPlan" tabindex="-1" role="dialog" aria-labelledby="CopyID" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Copy Plan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('menu.plan_copy', id=plan.id)}}" method="post">
+                    <label class="form-label" for="moveto">Copy to What Date</label>
+                    <input class="form-control" type="date" name="copyto" id="copyto">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

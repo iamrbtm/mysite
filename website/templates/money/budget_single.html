@@ -1,0 +1,117 @@
+{% extends "money/money_div.html" %}
+
+{% block title %}
+{{budget.date_start.strftime('%B %Y')}} Budget
+{% endblock %}
+
+{% block action_items %}
+<a href="{{url_for('money.budget_single_update', id=budget.id)}}" class="dropdown-item">Update Budget</a>
+<div class="dropdown-divider"></div>
+{% endblock action_items %}
+
+{% block content %}
+{% for allbudget in allbudgets %}
+<form action="{{url_for('money.budget')}}" method="post">
+    {% endfor %}
+    <label class="form-label-inline" for="budget">Select a Budget to View:</label>
+    <select class="form-select-inline" name="budget" id="budget">
+        {% for allbudget in allbudgets %}
+        <option value="{{allbudget.id}}">{{allbudget.date_start.strftime('%B %Y')}}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" class="btn btn-primary btn-sm form-inline" name="sub" id="sub" value="View Budget">
+</form>
+<br>
+{{budget.date_start.strftime('%B %Y')}} Budget
+
+<h4>Difference</h4>
+<table class="table table-sm table-inverse table-responsive">
+    <thead>
+        <tr>
+            <th>Income</th>
+            <th>Expenses</th>
+            <th>Difference</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{"${:,.2f}".format(incometotal)}}</td>
+            <td>{{"${:,.2f}".format(expensetotal)}}</td>
+            <td>{{"${:,.2f}".format(incometotal - expensetotal)}}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-6">
+        <h4>Income</h4>
+        <table class="table table-sm table-inverse table-responsive">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Catagory</th>
+                    <th>Amount</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = [0] %}
+                {% for cat in cats %}
+                {% for income in incomes %}
+                {% if cat.inc == True %}
+                {% if cat.id == income.catagory %}
+                <tr>
+                    <td scope="row">{{cat.catagory}}</td>
+                    <td>{{"${:,.2f}".format(income.amount)}}</td>
+                    <td>{{income.notes}}</td>
+                </tr>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                <tr>
+                    <td>Total:</td>
+                    <td>
+                        {{"${:,.2f}".format(incometotal)}}
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-6">
+        <h4>Expenses</h4>
+        <table class="table table-sm table-inverse table-responsive">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Catagory</th>
+                    <th>Amount</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = [0] %}
+                {% for cat in cats %}
+                {% for expense in expenses %}
+                {% if cat.exp == True %}
+                {% if cat.id == expense.catagory %}
+                <tr>
+                    <td scope="row">{{cat.catagory}}</td>
+                    <td>{{"${:,.2f}".format(expense.amount)}}</td>
+                    <td>{{expense.notes}}</td>
+                </tr>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                <tr>
+                    <td>Total:</td>
+                    <td>
+                        {{"${:,.2f}".format(expensetotal)}}
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

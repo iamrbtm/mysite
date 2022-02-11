@@ -1,0 +1,54 @@
+{% extends "menu/menu-div.html" %}
+
+{% block style %}
+{% endblock %}
+
+{% block title %}
+Guill Menu
+{% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('menu.recipe_new')}}">Add A New Recipe</a>
+<a class="dropdown-item" href="{{url_for('menu.scrape')}}">Scrape a Recipe</a>
+<div class="dropdown-divider"></div>
+{% endblock action_items %}
+
+{% block content %}
+<div class="card-deck">
+  {% for dish in dishes %}
+  {% if loop.index0 % 4 == 0 %}
+  <div class="row p-3">
+    {% endif %}
+    <div class="card">
+      <a href="/menu/recipe/{{dish.id}}"><img class="card-img-top" src="{{dish.pictureURL}}" alt="Card image cap"
+          width='100%' height='200px'></a>
+      <div class="card-body">
+        <h5 class="card-title">{{dish.name}}</h5>
+      </div>
+      <div class="card-footer">
+        <div id="catagory">
+          {% if dishcatscount != 0 %}
+          {% for cat in dishcats %}
+          {% if cat.dish == dish.id %}
+          <span class=" col-2 text-start p-1 mb-2 bg-primary text-white rounded">{{cat.cats}}</span>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+        </div>
+        <div id="tags" class="pt-2">
+          {% if dishtagscount != 0 %}
+          {% for tag in dishtags %}
+          {% if tag.dish == dish.id %}
+          <span class=" col-2 text-start p-1 mb-2 bg-primary text-white rounded">{{tag.tags}}</span>
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% if loop.index0 % 4 == 3 or loop.last %}
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

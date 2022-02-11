@@ -1,0 +1,11 @@
+Leg Numbers
+    1.0 - org (ex. Home to Dr Office)
+    1.10 - middle (ex. Dr Office to Pharmacy)
+    1.11 - end (ex. Pharmacy to Home)
+
+Mileage Reimbursement switches
+	1. needTripNumber: entered only in this system.  No Trip number is assigned
+	2. toSend: has trip number and ready to send to print document
+	3. printed:  the pdf has been processed and saved to the local hard drive.
+	4. sent: has been sent in and am awaiting reimbursement
+	5. finished: received the reimbursement and closed the trip in the system.

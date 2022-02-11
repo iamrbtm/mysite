@@ -1,0 +1,45 @@
+{% extends "mileage/mileage_div.html" %}
+
+{% block title %}
+Mileage Catagories
+{% endblock %}
+
+{% block style %}
+{% endblock %}
+
+{% block proheader %}
+Catagories
+{% endblock %}
+
+{% block submenu %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<!-- List of Trips -->
+<table class="table table-borderless table-sm">
+    <thead>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price Per Mile</th>
+        <th>Image Code</th>
+        <th>Save</th>
+    </thead>
+    <tbody>
+        <form action="{{url_for('mileage.catagory')}}" method="post">
+            {% for cat in catagories %}
+            <tr>
+                <td><input class="form-control" type="text" name="catagoryname" id="catagoryname" value="{{cat.catagoryname}}"></td>
+                <td><textarea class="form-control" row="2" name="description" id="description">{{cat.description}}</textarea></td>
+                <td><input class="form-control" type="text" name="pricepermile" id="pricepermile" value="{{cat.pricepermile}}"></td>
+                <td><input class="form-control" type="text" name="imgcode" id="imgcode" value="{{cat.imgcode}}"></td>
+                <td>
+                    <input type="hidden" name="id" id="id" value="{{cat.id}}">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </form>
+    </tbody>
+</table>
+{% endblock %}

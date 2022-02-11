@@ -1,0 +1,218 @@
+{% extends "menu/menu-div.html" %}
+
+{% block style %}
+{% endblock %}
+
+{% block title %}
+Guill Menu - Recipe for {{dish.name}}
+{% endblock %}
+
+{% block proheader %}
+{{dish.name}}
+{% endblock %}
+
+{% block submenu %}
+{{ super() }}
+{% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('menu.recipe_update', id=dish.id)}}">Edit {{dish.name}}</a>
+<a class="dropdown-item" href="#">Print</a>
+<a class="dropdown-item" href="#">Email</a>
+{% endblock action_items %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-9 text-center" id="Picture and Information">
+      {% if dish.pictureURL %}
+      <picture>
+        <img src="{{dish.pictureURL}}" alt="Picture Of Dish" class="img-fluid" style="max-height:400px; width:auto;">
+      </picture>
+      {% else %}
+      <img src="https://image.shutterstock.com/image-vector/ui-image-placeholder-wireframes-apps-260nw-1037719204.jpg"
+        class='img-thumbnail' alt="Picture Of Dish">
+      {% endif %}
+      <div class="pt-5 text-start" style="font-size:50px;">{{dish.name}}</div>
+      <div class="lead text-start">{{dish.description}}</div>
+    </div>
+    <div class="col-3">
+      {% if dish.numServings != "" and dish.numServings != None%}
+      <div class="col p-1 mb-2 bg-success text-white rounded">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px" y="0px" viewBox="0 0 122.88 117.09" style="enable-background:new 0 0 122.88 117.09"
+          xml:space="preserve" width="25px" height="25px">
+          <style type="text/css">
+            .st0 {
+              fill-rule: evenodd;
+              clip-rule: evenodd;
+            }
+          </style>
+          <g>
+            <path class="st0"
+              d="M36.82,107.86L35.65,78.4l13.25-0.53c5.66,0.78,11.39,3.61,17.15,6.92l10.29-0.41c4.67,0.1,7.3,4.72,2.89,8 c-3.5,2.79-8.27,2.83-13.17,2.58c-3.37-0.03-3.34,4.5,0.17,4.37c1.22,0.05,2.54-0.29,3.69-0.34c6.09-0.25,11.06-1.61,13.94-6.55 l1.4-3.66l15.01-8.2c7.56-2.83,12.65,4.3,7.23,10.1c-10.77,8.51-21.2,16.27-32.62,22.09c-8.24,5.47-16.7,5.64-25.34,1.01 L36.82,107.86L36.82,107.86z M29.74,62.97h91.9c0.68,0,1.24,0.57,1.24,1.24v5.41c0,0.67-0.56,1.24-1.24,1.24h-91.9 c-0.68,0-1.24-0.56-1.24-1.24v-5.41C28.5,63.53,29.06,62.97,29.74,62.97L29.74,62.97z M79.26,11.23 c25.16,2.01,46.35,23.16,43.22,48.06l-93.57,0C25.82,34.23,47.09,13.05,72.43,11.2V7.14l-4,0c-0.7,0-1.28-0.58-1.28-1.28V1.28 c0-0.7,0.57-1.28,1.28-1.28h14.72c0.7,0,1.28,0.58,1.28,1.28v4.58c0,0.7-0.58,1.28-1.28,1.28h-3.89L79.26,11.23L79.26,11.23 L79.26,11.23z M0,77.39l31.55-1.66l1.4,35.25L1.4,112.63L0,77.39L0,77.39z" />
+          </g>
+        </svg> Servings | {{dish.numServings}}</div>
+      {% endif %}
+
+      {% if dish.prepTime != "" and dish.prepTime != None%}
+      <div class="col p-1 mb-2 bg-info text-white rounded">
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"
+          width="25px" height="25px">
+          <defs>
+            <style>
+              .cls-1 {
+                fill-rule: evenodd;
+              }
+            </style>
+          </defs>
+          <title>time-clock</title>
+          <path class="cls-1"
+            d="M61.44,0A61.44,61.44,0,1,1,0,61.44,61.44,61.44,0,0,1,61.44,0ZM52.92,30.52h7.51a2.51,2.51,0,0,1,2.5,2.5V62H89.34a2.51,2.51,0,0,1,2.5,2.5V72a2.51,2.51,0,0,1-2.5,2.5H50.41V33a2.51,2.51,0,0,1,2.51-2.5Z" />
+        </svg> Prep Time | {{dish.prepTime}}</div>
+      {% endif %}
+
+      {% if dish.servingSize != "" and dish.servingSize != None%}
+      <div class="col p-1 mb-2 border-dark bg-info text-white rounded">
+        <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px" y="0px" width="25px" height="25px" viewBox="0 0 100 100" enable-background="new 0 0 100 100"
+          xml:space="preserve">
+          <polygon points="40.022,56.667 54.453,56.667 59.978,43.333 45.547,43.333 " />
+          <path d="M83.333,10H16.667C13.001,10,10,13.001,10,16.667v66.666C10,86.999,13.001,90,16.667,90h66.666
+	C86.999,90,90,86.999,90,83.333V16.667C90,13.001,86.999,10,83.333,10z M80,43.333H67.194L61.67,56.667h11.663v6.666H58.909
+	L52.005,80l-6.158-2.552l5.846-14.115h-14.43L30.358,80l-6.159-2.552l5.847-14.115H20v-6.666h12.806l5.524-13.334H26.667v-6.666
+	h14.424L47.995,20l6.158,2.552l-5.846,14.115h14.43L69.642,20l6.159,2.552l-5.847,14.115H80V43.333z" />
+        </svg>
+        Serving Size | {{dish.servingSize}}</div>
+      {% endif %}
+
+      {% if dish.cookTime != "" and dish.cookTime != None%}
+      <div class="col p-1 mb-2 bg-info text-white rounded">
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 122.88"
+          width="25px" height="25px">
+          <defs>
+            <style>
+              .cls-1 {
+                fill-rule: evenodd;
+              }
+            </style>
+          </defs>
+          <title>time-clock</title>
+          <path class="cls-1"
+            d="M61.44,0A61.44,61.44,0,1,1,0,61.44,61.44,61.44,0,0,1,61.44,0ZM52.92,30.52h7.51a2.51,2.51,0,0,1,2.5,2.5V62H89.34a2.51,2.51,0,0,1,2.5,2.5V72a2.51,2.51,0,0,1-2.5,2.5H50.41V33a2.51,2.51,0,0,1,2.51-2.5Z" />
+        </svg> Cook Time | {{dish.cookTime}}</div>
+      {% endif %}
+
+      {% if dish.cookTemp != "" and dish.cookTemp != None%}
+      <div class="col p-1 mb-2 bg-info text-white rounded">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px" y="0px" viewBox="0 0 65.75 122.88" style="enable-background:new 0 0 65.75 122.88" xml:space="preserve"
+          width="25px" height="25px">
+          <style type="text/css">
+            .st0 {
+              fill-rule: evenodd;
+              clip-rule: evenodd;
+            }
+          </style>
+          <g>
+            <path class="st0"
+              d="M16.91,47.63h19.88v-32.6c0-2.73-1.12-5.22-2.92-7.02c-1.8-1.8-4.29-2.92-7.02-2.92s-5.22,1.12-7.02,2.92 c-1.8,1.8-2.92,4.29-2.92,7.02V47.63L16.91,47.63z M49.06,13.93c-1.41,0-2.55-1.14-2.55-2.55c0-1.41,1.14-2.55,2.55-2.55H63.2 c1.41,0,2.55,1.14,2.55,2.55c0,1.41-1.14,2.55-2.55,2.55H49.06L49.06,13.93z M49.06,28.3c-1.41,0-2.55-1.14-2.55-2.55 s1.14-2.55,2.55-2.55H63.2c1.41,0,2.55,1.14,2.55,2.55s-1.14,2.55-2.55,2.55H49.06L49.06,28.3z M49.06,42.67 c-1.41,0-2.55-1.14-2.55-2.55c0-1.41,1.14-2.55,2.55-2.55H63.2c1.41,0,2.55,1.14,2.55,2.55c0,1.41-1.14,2.55-2.55,2.55H49.06 L49.06,42.67z M49.06,57.04c-1.41,0-2.55-1.14-2.55-2.55c0-1.41,1.14-2.55,2.55-2.55H63.2c1.41,0,2.55,1.14,2.55,2.55 c0,1.41-1.14,2.55-2.55,2.55H49.06L49.06,57.04z M49.06,71.41c-1.41,0-2.55-1.14-2.55-2.55c0-1.41,1.14-2.55,2.55-2.55H63.2 c1.41,0,2.55,1.14,2.55,2.55c0,1.41-1.14,2.55-2.55,2.55H49.06L49.06,71.41z M41.88,74.45c6.87,4.81,11.36,12.79,11.36,21.81 c0,14.7-11.92,26.62-26.62,26.62C11.92,122.88,0,110.96,0,96.26c0-9.22,4.69-17.35,11.82-22.12V15.03c0-4.14,1.69-7.89,4.41-10.62 C18.95,1.69,22.71,0,26.85,0c4.14,0,7.89,1.69,10.62,4.41c2.72,2.72,4.41,6.48,4.41,10.62V74.45L41.88,74.45z" />
+          </g>
+        </svg> Cook Temp | {{dish.cookTemp}}</div>
+      {% endif %}
+
+      {% if dish.origurl != "" and dish.origurl != None%}
+      <a href="{{dish.origurl}}"
+        class="col btn text-decoration-none text-start p-1 mb-2 bg-secondary text-white rounded" target="_blank">
+        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 95.51" width="25px"
+          height="25px">
+          <defs>
+            <style>
+              .cls-1 {
+                fill-rule: evenodd;
+              }
+            </style>
+          </defs>
+          <title>website</title>
+          <path class="cls-1"
+            d="M12.6,26.42h96.77V70.15H12.6V26.42ZM25.85,56.24l-4.06-17h6.3L29.82,50.6l2.7-11.33h5L40.21,50.6l1.38-11.33h6.3l-4,17H37.18L34.89,48l-2.43,8.22Zm26.6,0-4.06-17h6.3L56.42,50.6l2.71-11.33h5L66.81,50.6l1.38-11.33h6.3l-4,17H63.79L61.49,48l-2.43,8.22Zm26.6,0L75,39.27h6.3L83,50.6l2.71-11.33h5L93.41,50.6l1.38-11.33h6.3l-4,17H90.39L88.09,48l-2.43,8.22ZM8.32,0H114.56a8.34,8.34,0,0,1,8.32,8.32V87.19a8.35,8.35,0,0,1-8.32,8.32H8.32A8.34,8.34,0,0,1,0,87.19V8.32A8.34,8.34,0,0,1,8.32,0ZM118,20.1H5.29V88a2.29,2.29,0,0,0,2.3,2.3h108a2.29,2.29,0,0,0,2.3-2.3V20.1ZM106.64,7.22a4.11,4.11,0,1,1-4.11,4.11,4.11,4.11,0,0,1,4.11-4.11Zm-27.84,0a4.11,4.11,0,1,1-4.11,4.11A4.11,4.11,0,0,1,78.8,7.22Zm13.92,0a4.11,4.11,0,1,1-4.11,4.11,4.11,4.11,0,0,1,4.11-4.11ZM66.87,84.74a3.51,3.51,0,0,1,0-7h39.65a3.51,3.51,0,0,1,0,7ZM15,84.74a3.52,3.52,0,0,1,0-7H51.72a3.52,3.52,0,0,1,0,7Z" />
+        </svg> Original Receipe</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-5">
+      <div class="shadow p-3 mb-2 bg-light rounded" id="Recipe">
+        <div class="float-start">
+          <h6 class="display-6"><strong>Recipe</strong></h6>
+        </div>
+
+        <table class="table table-sm table-responsive">
+          <thead>
+            <tr>
+              <td>Ingredient</td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+            {% for recipe in recipes %}
+            <tr>
+              <td><span class="lead text-body">{{recipe.qty}} {{recipe.measurement}} {{recipe.ing}}</span></td>
+            </tr>
+            {% endfor %}
+            {% if dishcatscount != 0 %}
+            <tr>
+              <td>
+                <i class="material-icons">category</i><span class="text-black text-start"> Catagories</span> <br>
+                {% for item in dishcats %}
+                <span class="col-4 btn text-start p-1 mb-2 bg-primary text-white rounded">
+                  <a class="btn text-warning text-end p-0 g-0 text-decoration-none"
+                    href="{{url_for('menu.deletecat', id=item[0], dishid=dish.id)}}"><i class="fa fa-times"></i></a>
+                  {{item[2]}}</span>
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+            {% if dishtagscount != 0 %}
+            <tr>
+              <td>
+                <i class="material-icons">local_offer</i><span class="text-black text-start"> Tags</span> <br>
+                {% for item in dishtags %}
+                <span class="col-4 btn text-start p-1 mb-2 bg-primary text-white rounded">
+                  <a class="btn text-warning text-end p-0 g-0 text-decoration-none"
+                    href="{{url_for('menu.deletetag', id=item[0], dishid=dish.id)}}"><i class="fa fa-times"></i></a>
+                  {{item[2]}}</span>
+                {% endfor %}
+              </td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+
+      </div>
+      <div class="shadow p-3 mb-2 bg-light rounded" id="Nutrition">
+        {% include 'menu/nutinfo.html' %}
+      </div>
+    </div>
+    <div class="col-7 shadow p-3 mb-2 bg-light rounded" id="Steps">
+      <div class="float-start">
+        <h6 class="display-6 text-left"><b>Steps</b></h6>
+      </div>
+      <!-- Steps -->
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <td>Step</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for step in steps %}
+          <tr>
+            <td><span class="lead text-body">{{step.step_num}}. {{step.step_text}}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endblock %}

@@ -1,0 +1,105 @@
+{% extends "menu/menu-div.html" %}
+
+{% block title %}
+Guill Menu
+{% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item" href="{{url_for('menu.printplan', weeknum = currentweek)}}">Print</a>
+<a class="dropdown-item" href="#">Email</a>
+{% endblock action_items %}
+
+{% block content %}
+<div class="d-flex">
+    <div class="p-2">
+        <h4>Week Of {{firstdow}} - {{lastdow}}</h4>
+    </div>
+    <div class="ml-auto p-2">
+        <a href="{{url_for('menu.prev_week', id=currentweek)}}" class="btn btn-secondary">
+            <</a> <a href="{{url_for('menu.next_week', id=currentweek)}}" class="btn btn-secondary">>
+        </a>
+    </div>
+</div>
+<table class="table table-hover table-sm">
+    <thead>
+        <tr class="row">
+            <th class="col-2">Date</th>
+            <th class="col-3">Main</th>
+            <th class="col-3">Sides</th>
+            <th class="col-2">Drink</th>
+            <th class="col-2">Dessert</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for plan in plans%}
+        <tr class="row">
+            <td class="col-2">
+                <a href="{{url_for('menu.menu_single', id=plan.id)}}" class="btn text-left"><b>{{plan.date.strftime('%A')}}</b>
+                    {% for holiday in holidays  %}
+                    {% if holiday.date.strftime('%Y%m%d') == plan.date.strftime('%Y%m%d') %}
+                        <br> <span class="small text-info">{{holiday.holiday}}</span>
+                        {% endif %}
+                        {% endfor %}
+                    <br> <span class="small">{{plan.date.strftime('%m/%d/%Y')}}</span></a>
+            </td>
+            <td class="col-3">
+                {% for pd in plandish %}
+                {% if plan.id == pd.planidfk %}
+                {% for dish in dishes %}
+                {% if dish.id == pd.mainidfk %}
+                <a class="text-decoration-none text-black" href="{{url_for('menu.recipe_single', id=dish.id)}}">{{dish.name}}</a>
+                {% if not loop.last %}
+                <br>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td class="col-3">
+                {% for pd in plandish %}
+                {% if plan.id == pd.planidfk %}
+                {% for dish in dishes %}
+                {% if dish.id == pd.sideidfk %}
+                <a class="text-decoration-none text-black" href="{{url_for('menu.recipe_single', id=dish.id)}}">{{dish.name}}</a>
+                {% if not loop.last %}
+                <br>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td class="col-2">
+                {% for pd in plandish %}
+                {% if plan.id == pd.planidfk %}
+                {% for dish in dishes %}
+                {% if dish.id == pd.drinkidfk %}
+                <a class="text-decoration-none text-black" href="{{url_for('menu.recipe_single', id=dish.id)}}">{{dish.name}}</a>
+                {% if not loop.last %}
+                <br>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </td>
+            <td class="col-2">
+                {% for pd in plandish %}
+                {% if plan.id == pd.planidfk %}
+                {% for dish in dishes %}
+                {% if dish.id == pd.dessertidfk %}
+                <a class="text-decoration-none text-black" href="{{url_for('menu.recipe_single', id=dish.id)}}">{{dish.name}}</a>
+                {% if not loop.last %}
+                <br>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

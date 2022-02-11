@@ -1,0 +1,25 @@
+{% extends "money/money_div.html" %}
+
+{% block title %}
+BILLS
+{% endblock %}
+
+{% block action_items %}
+    
+{% endblock action_items %}
+
+{% block content %}
+Budget
+{% for budget in budgets %}
+<form action="{{url_for('money.budget')}}" method="post">
+    {% endfor %}
+    <label class="form-label" for="budget">Select a Budget to View:</label>
+    <select name="budget" id="budget">
+        {% for budget in budgets %}
+            <option value="{{budget.id}}">{{budget.date_start.strftime('%B %Y')}}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" class="btn btn-primary" name="sub" id="sub" value="View Budget">
+</form>
+{% endblock %}
+

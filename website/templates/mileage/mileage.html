@@ -1,0 +1,653 @@
+{% extends "health/health-div.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block action_items %}
+{% if needTripNumCount != 0 %}
+<a href="{{url_for('mileage.mileageTripNum')}}" class="dropdown-item text-warning">{{needTripNumCount}} Trip{% if needTripNumCount == 1 %}{% else %}s{% endif %} Need Reservation Numbers</a>
+<div class="dropdown-divider"></div>
+{% endif %}
+{% if tosendCount != 0 %}
+<a href="{{url_for('mileage.fillpdf')}}" class="dropdown-item text-warning">{{tosendCount}} Trip{% if tosendCount == 1 %}{% else %}s{% endif %} Ready To Print!</a>
+<div class="dropdown-divider"></div>
+{% endif %}
+<button type="button" class="dropdown-item" data-toggle="modal" data-target="#onewayAppointment">Add Oneway
+    Reservation</button>
+<button type="button" class="dropdown-item" data-toggle="modal" data-target="#singleAppointment">Add Roundtrip
+    Reservation</button>
+<button type="button" class="dropdown-item" data-toggle="modal" data-target="#threewayAppointment">Add 3-Leg
+    Reservation</button>
+<div class="dropdown-divider"></div>
+<button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#doctorModal">Add A Doctor</button>
+<button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#facilityModal">Add New
+    Facility</button>
+<button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#catagoryModal">Add New
+    Catagory</button>
+{% endblock action_items %}
+
+{% block content %}
+<table class="table table-borderless table-sm table-responsive">
+    <thead>
+        <th></th>
+        <th>Need<br>Trip#</th>
+        <th>To Print</th>
+        <th class="text-danger">Printed</th>
+        <th class="text-warning">Sent</th>
+        <th class="text-secondary">Final</th>
+        <th>Total</th>
+    </thead>
+    <tr>
+        <td>Price:<br>Mileage:</td>
+        <td>
+            <i>
+                {{"$%.2f"|format(ntn[0])}} <br>
+                {{"%.0f"|format(ntn[1])}}
+            </i>
+        </td>
+        <td>
+            <i>
+                {{"$%.2f"|format(tosend[0])}} <br>
+                {{"%.0f"|format(tosend[1])}}
+            </i>
+        </td>
+        <td>
+            <i>
+                {{"$%.2f"|format(print[0])}} <br>
+                {{"%.0f"|format(print[1])}}
+            </i>
+        </td>
+        <td>
+            <i>
+                {{"$%.2f"|format(sent[0])}} <br>
+                {{"%.0f"|format(sent[1])}}
+            </i>
+        </td>
+        <td>
+            <i>
+                {{"$%.2f"|format(final[0])}} <br>
+                {{"%.0f"|format(final[1])}}
+            </i>
+        </td>
+        <td>
+            <strong>
+                {{"$%.2f"|format(total[0])}} <br>
+                {{"%.0f"|format(total[1])}}
+            </strong>
+        </td>
+    </tr>
+</table>
+<div class="col-12">
+    <table class="table table-hover table-striped table-responsive">
+        <thead>
+            <th>Date <br>Trip Number <br> <small>Notes</small></th>
+            <th></th>
+            <th>Origin Address</th>
+            <th>Destination Address</th>
+            <th>Mileage</th>
+            <th>Price</th>
+        </thead>
+        <tbody>
+            {% for trip in trips %}
+            {% if trip.printed == True %}
+            <tr class="table-danger">
+                {% elif trip.sent == True%}
+            <tr class="table-warning">
+                {% elif trip.finished == True%}
+            <tr class="table-secondary">
+                {% else %}
+            <tr>
+                {% endif %}
+                <td>
+                    <small>{{trip.date.strftime("%a")}}</small>
+                    {{trip.date.strftime("%m/%d/%Y")}} @ {{trip.time.strftime('%I:%M %p')}}
+                    <br>
+                    {% if trip.tripnumber != "" %}
+                    {% if trip.tosend == True %}
+                    <a href="{{url_for('mileage.tripnumremove', id=trip.id)}}" class="text-danger">X</a>
+                    Trip Number: {{trip.tripnumber}} <br>
+                    {% else %}
+                    Trip Number: {{trip.tripnumber}} <br>
+                    {% endif %}
+                    {% else %}
+                    <form action="{{url_for('mileage.tripnumadd', id=trip.id)}}" method="post" style="width: 250px;">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="text" class="form-control" name="tripnum" id="tripnum"
+                                    placeholder="Enter Trip Number">
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
+                    {% for cat in catagories %}
+                    {% if cat.id == trip.catagoryfk %}
+                    <small>{{cat.catagoryname}}</small>
+                    {% endif %}
+                    {% endfor %}
+                    {% if trip.notes != None%}
+                    <br><small class="text-danger">{{trip.notes|upper}}</small>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if trip.returnleg == True %}
+                    <img src="{{url_for('static', filename='images/roundtrip.png')}}" width="25px" height="25px">
+                    {% elif trip.threeway == True %}
+                    <img src="{{url_for('static', filename='images/threeway.png')}}" width="25px" height="25px">
+                    {% else %}
+                    <img src="{{url_for('static', filename='images/oneway.png')}}" width="25px" height="25px">
+                    {% endif %}
+
+                    {% for cat in catagories %}
+                    {% if cat.id == trip.catagoryfk%}
+                    <div style="width: 25px; height:25px;">
+                        {{cat.imgcode|safe}}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for loc in facilities %}
+                    {% if loc.id == trip.originfk %}
+                    {{loc.name}} <br>
+                    {{loc.address}} <br>
+                    {{loc.city}}, {{loc.state}} {{loc.zip}}
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for loc in facilities %}
+                    {% if loc.id == trip.destinationfk %}
+                    {{loc.name}} <br>
+                    {{loc.address}} <br>
+                    {{loc.city}}, {{loc.state}} {{loc.zip}} <br>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{trip.mileage}}</td>
+                <td>
+                    {% for cat in catagories %}
+                    {% if cat.id == trip.catagoryfk %}
+                    {{"$%.2f"|format(trip.mileage * cat.pricepermile)}}
+                    {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Threeway Reservation Modal -->
+<div class="modal fade" id="threewayAppointment" tabindex="-1" role="dialog" aria-labelledby="threewayAppointmentLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="threewayAppointmentLabel">Add a 3 Legged Trip</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('mileage.mileageHome')}}" method="post" class="row g2">
+                    <table>
+                        <td>
+                            <tr>
+                                <div class="col-6">
+                                    <label class="form-label" for="date">Date</label>
+                                    <input class="form-control" type="date" name="date" id="date">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" for="tripnum">Trip Number</label>
+                                    <input class="form-control" type="text" name="tripnum" id="tripnum">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label" for="origin">Trip Start Location</label>
+                                    <select class="form-select" name="origin" id="origin">
+                                        <option value="0">Select Starting Place</option>
+                                        {% for loc in facilities %}
+                                        <option value="{{loc.id}}">{{loc.name}} - {{loc.address}} {{loc.city}},
+                                            {{loc.state}}
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <br>
+                                    <p class="lead"><strong>Appointment 1</strong></p>
+
+                                    <label class="form-label" for="dest">Where Are You Going?</label>
+                                    <select class="form-select" name="dest" id="dest">
+                                        <option value="0">Select appointment</option>
+                                        {% for loc in facilities %}
+                                        <option value="{{loc.id}}">{{loc.name}} - {{loc.address}} {{loc.city}},
+                                            {{loc.state}}
+                                            {{loc.zip}}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label class="form-label" for="time">Appointment Time</label>
+                                    <input class="form-control" type="time" name="time" id="time">
+
+                                    <label class="form-label" for="catagory">Catagory</label>
+                                    <select class="form-select" name="catagory" id="catagory">
+                                        {% for cat in catagories %}
+                                        <option value="{{cat.id}}">{{cat.catagoryname}} - {{cat.pricepermile}}/mile
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label class="form-label" for="whom">Doctor / Reason</label>
+                                    <select class="form-select" name="whom" id="whom">
+                                        {% for doc in doctors %}
+                                        <option value="{{doc.id}}">{{doc.fulldisplayname}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <br>
+                                    <p class="lead"><strong>Appointment 2</strong></p>
+
+                                    <label class="form-label" for="dest2">Where Are You Going?</label>
+                                    <select class="form-select" name="dest2" id="dest2">
+                                        <option value="0">Select appointment</option>
+                                        {% for loc in facilities %}
+                                        <option value="{{loc.id}}">{{loc.name}} - {{loc.address}} {{loc.city}},
+                                            {{loc.state}}
+                                            {{loc.zip}}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label class="form-label" for="time2">Appointment Time</label>
+                                    <input class="form-control" type="time" name="time2" id="time2">
+
+                                    <label class="form-label" for="catagory2">Catagory</label>
+                                    <select class="form-select" name="catagory2" id="catagory2">
+                                        {% for cat in catagories %}
+                                        <option value="{{cat.id}}">{{cat.catagoryname}} - {{cat.pricepermile}}/mile
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <label class="form-label" for="whom2">Doctor / Reason</label>
+                                    <select class="form-select" name="whom2" id="whom2">
+                                        {% for doc in doctors %}
+                                        <option value="{{doc.id}}">{{doc.fulldisplayname}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-label" for="notes">Notes</label>
+                                    <textarea class="form-control" name="notes" id="notes" rows="2"></textarea>
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="oneway"
+                                        value="oneway">
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="returnleg"
+                                        value="returnleg">
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="threeway"
+                                        value="threeway" checked>
+                                </div>
+                            </tr>
+                        </td>
+                    </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="hidden" name="thisuserid" value="{{current_user.id}}">
+                <button class="btn btn-primary" type="submit" name="reservation" value="threeway">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Roundtrip Appointment Modal -->
+<div class="modal fade" id="singleAppointment" tabindex="-1" role="dialog" aria-labelledby="singleAppointmentLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="singleAppointmentLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('mileage.mileageHome')}}" method="post">
+                    <table>
+                        <td>
+                            <tr>
+                                <div>
+                                    <label class="form-label" for="date">Date</label>
+                                    <input class="form-control" type="date" name="date" id="date">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="time">Appointment Time</label>
+                                    <input class="form-control" type="time" name="time" id="time">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="tripnum">Trip Number</label>
+                                    <input class="form-control" type="text" name="tripnum" id="tripnum">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="origin">Trip Start Location</label>
+                                    <select class="form-select" name="origin" id="origin">
+                                        <option value="0">Select Starting Place</option>
+                                        {% for loc in facilities %}
+                                        <option value="{{loc.id}}">{{loc.name}} - {{loc.address}} {{loc.city}},
+                                            {{loc.state}}
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="dest">Where Are You Going?</label>
+                                    <select class="form-select" name="dest" id="dest">
+                                        <option value="0">Select appointment</option>
+                                        {% for loc in facilities %}
+                                        <option value="{{loc.id}}">{{loc.name}} - {{loc.address}} {{loc.city}},
+                                            {{loc.state}}
+                                            {{loc.zip}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="catagory">Catagory</label>
+                                    <select class="form-select" name="catagory" id="catagory">
+                                        {% for cat in catagories %}
+                                        <option value="{{cat.id}}">{{cat.catagoryname}} - {{cat.pricepermile}}/mile
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="whom">Doctor / Reason</label>
+                                    <select class="form-select" name="whom" id="whom">
+                                        {% for doc in doctors %}
+                                        <option value="{{doc.id}}">{{doc.fulldisplayname}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-label" for="notes">Notes</label>
+                                    <textarea class="form-control" name="notes" id="notes" rows="2"></textarea>
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="oneway"
+                                        value="oneway">
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="returnleg"
+                                        value="returnleg" checked>
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="threeway"
+                                        value="threeway">
+                                </div>
+                            </tr>
+                        </td>
+                    </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="hidden" name="thisuserid" value="{{current_user.id}}">
+                <button class="btn btn-primary" type="submit" name="reservation" value="single">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Oneway Appointment Modal -->
+<div class="modal fade" id="onewayAppointment" tabindex="-1" role="dialog" aria-labelledby="onewayAppointmentLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="onewayAppointmentLabel">One Way Trip</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('mileage.mileageHome')}}" method="post">
+                    <table>
+                        <td>
+                            <tr>
+                                <div>
+                                    <label class="form-label" for="date">Date</label>
+                                    <input class="form-control" type="date" name="date" id="date">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="time">Appointment Time</label>
+                                    <input class="form-control" type="time" name="time" id="time">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="tripnum">Trip Number</label>
+                                    <input class="form-control" type="text" name="tripnum" id="tripnum">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="origin">Trip Start Location</label>
+                                    <select class="form-select" name="origin" id="origin">
+                                        <option value="0">Select Starting Place</option>
+                                        {% for loc in facilities %}
+                                        <option value="{{loc.id}}">{{loc.name}} - {{loc.address}} {{loc.city}},
+                                            {{loc.state}}
+                                            {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="dest">Where Are You Going?</label>
+                                    <select class="form-select" name="dest" id="dest">
+                                        <option value="0">Select appointment</option>
+                                        {% for loc in facilities %}
+                                        <option value="{{loc.id}}">{{loc.name}} - {{loc.address}} {{loc.city}},
+                                            {{loc.state}}
+                                            {{loc.zip}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="catagory">Catagory</label>
+                                    <select class="form-select" name="catagory" id="catagory">
+                                        {% for cat in catagories %}
+                                        <option value="{{cat.id}}">{{cat.catagoryname}} - {{cat.pricepermile}}/mile
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label" for="whom">Doctor / Reason</label>
+                                    <select class="form-select" name="whom" id="whom">
+                                        {% for doc in doctors %}
+                                        <option value="{{doc.id}}">{{doc.fulldisplayname}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-check">
+                                    <label class="form-label" for="notes">Notes</label>
+                                    <textarea class="form-control" name="notes" id="notes" rows="2"></textarea>
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="onewayleg"
+                                        value="oneway" checked>
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="returnleg"
+                                        value="returnleg">
+                                    <input hidden class="form-check-input" type="radio" name="tripoption" id="threeway"
+                                        value="threeway">
+                                </div>
+                            </tr>
+                        </td>
+                    </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <input type="hidden" name="thisuserid" value="{{current_user.id}}">
+                <button class="btn btn-primary" type="submit" name="reservation" value="single">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Catagory Modal -->
+<div class="modal fade" id="catagoryModal" tabindex="-1" aria-labelledby="catagoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="catagoryModalLabel">Add a New Catagory</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('mileage.mileageHome') }}" method="post">
+                    <div class="col-12">
+                        <label class="form-label" for="catagoryname">Name of Catagory</label>
+                        <input type="text" class="form-control" name="catagoryname" id="catagoryname">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="desc">Description</label>
+                        <textarea class="form-control" name="desc" id="desc" rows="4"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="price">Price Per Mile</label>
+                        <input type="text" class="form-control" name="price" id="price">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="price">SVG Code</label>
+                        <input type="text" class="form-control" name="svg" id="svg">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="thisuserid" value="{{current_user.id}}">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" name="catagorybtn" value="catagory">Save
+                    changes</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Facility Modal -->
+<div class="modal fade" id="facilityModal" tabindex="-1" aria-labelledby="facilityModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="facilityModalLabel">Add a New Facility</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('mileage.mileageHome') }}" , method="POST" class="row g-2">
+                    <div class="col-12">
+                        <label for="drname">Facility Name</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                    </div>
+                    <div class="col-6">
+                        <label for="addy">Address</label>
+                        <input type="text" class="form-control" name="addy" id="addy">
+                    </div>
+                    <div class="col-2">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" name="city">
+                    </div>
+                    <div class="col-2">
+                        <label for="state">State</label>
+                        <input type="text" class="form-control" name="state" id="state" maxlength="2">
+                    </div>
+                    <div class="col-2">
+                        <label for="zip">Zip Code</label>
+                        <input type="text" class="form-control" name="zip" id="zip">
+                    </div>
+                    <div class="col-6">
+                        <label for="type">Type of Facility</label> <br>
+                        <select name="type" id="type" class="form-select">
+                            <option value="Hosptial">Hosptial</option>
+                            <option value="Clinic">Clinic</option>
+                            <option value="Pharmacy">Pharmacy</option>
+                            <option value="DME">DME</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" class="form-control" name="phone" id="phone">
+                        <input type="hidden" name='thisuserid' value="{{current_user.id}}">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" name="facilitybtn" value="facility">Save
+                    changes</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Doctors Modal -->
+<div class="modal fade" id="doctorModal" tabindex="-1" aria-labelledby="doctorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="doctorModalLabel">Add A Doctor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('mileage.mileageHome') }}", method="POST" class="row g-2">
+                    <div class="col-12 form-inline">
+                        <label class="form-label" for="drname">Doctor's Name</label>
+                        <div class="row g-2">
+                            <input type="text" class="form-control col-2" id="prefix" name="prefix"
+                                placeholder="Dr., Mr., Mrs., etc">
+                            <input type="text" class="form-control col-3" id="firstname" name="firstname"
+                                placeholder="John">
+                            <input type="text" class="form-control col-1" id="middleinit" name="middleinit"
+                                placeholder="M">
+                            <input type="text" class="form-control col-3" id="lastname" name="lastname"
+                                placeholder="Doe">
+                            <input type="text" class="form-control col-2" id="suffix" name="suffix"
+                                placeholder="MD, III, DMD, etc">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="facility">Facility</label>
+                        <select class="form-select" type="text" name="facility" id="facility" list="facility">
+                            {% for facility in facilities %}
+                            {% if facility.userid == current_user.id %}
+                            {% if facility.type != 'Pharmacy' %}
+                            <option value="{{facility.id}}">{{facility.name}}</option>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" name="address">
+                    </div>
+                    <div class="col-3">
+                        <label for="city">City</label>
+                        <input type="text" class="form-control" id="city" name="city">
+                    </div>
+                    <div class="col-2">
+                        <label for="state">State</label>
+                        <input type="text" class="form-control" id="state" name="state">
+                    </div>
+                    <div class="col-2">
+                        <label for="zip">Zip Code</label>
+                        <input type="text" class="form-control" id="zip" name="zip">
+                    </div>
+                    <div class="col-4">
+                        <label for="phone">Phone Number</label>
+                        <input type="text" class="form-control" id="phone" name="phone">
+                    </div>
+                    <div class="col-4">
+                        <label for="email">E-mail Address</label>
+                        <input type="text" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="col-4">
+                        <label for="asst">Assistants Name</label>
+                        <input type="text" class="form-control" id="asst" name="asst">
+                        <input type="hidden" name='thisuserid' value="{{current_user.id}}">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" name="doctorbtn" value="doctor">Save changes</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

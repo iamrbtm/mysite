@@ -1,0 +1,66 @@
+{% extends "health/health-div.html" %}
+
+{% block title %}
+{{current_user.username}} Allergic Medications
+{% endblock %}
+
+{% block action_items %}
+<button type="button" class="dropdown-item" data-toggle="modal" data-target="#allergyID">Add Allergy</button>
+<div class="dropdown-divider"></div>
+<a href="{{url_for('health.medlistPrint')}}" class="dropdown-item">Allergy List</a>
+{% endblock action_items %}
+
+{% block content %}
+<table class="table table-hover table-striped table-responsive">
+    <thead>
+        <th>Name of Medication</th>
+        <th>Reaction</th>
+        <th>Date Discovered</th>
+    </thead>
+    <tbody>
+        {% for allergy in allergies %}
+        <tr>
+            <td><a href="/health/allergy/{{allergy.id}}" class="btn text-danger">{{allergy.name}}</a></td>
+            <td>{{allergy.reaction}}</td>
+            <td>{{allergy.dateadded.strftime("%m-%d-%Y")}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="allergyID" tabindex="-1" role="dialog" aria-labelledby="addallergy" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Allergy</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </div>
+            <div class="modal-body">
+                <form action="/health/allergies" , method="POST" class="row g-3">
+                    <div class="col-12">
+                        <label for="name">Name of Allergy</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                    </div>
+                    <div class="col-12">
+                        <label for="reaction">Reaction</label>
+                        <input type="text" class="form-control" name="reaction" id="reaction">
+                    </div>
+                    <div class="col-12">
+                        <label for="dateadded">Date Added as Allergy</label>
+                        <input type="date" class="form-control" id="dateadded" name="dateadded">
+                        <input type="hidden" name='thisuserid' value="{{current_user.id}}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Allergy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

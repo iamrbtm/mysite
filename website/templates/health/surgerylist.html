@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surgery List</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        .header {
+            position: static;
+            top: 0;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+        }
+
+        body {
+            position: relative;
+            top: 75px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="text-black h5">
+            Surgery List for {{current_user.firstname}} {{current_user.lastname}}
+        </div>
+        <div class="h6">
+            <p style="font-size: 14px;">DOB: {{current_user.dob.strftime("%m/%d/%y") }}</p>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-sm">
+        <thead>
+        <th>Start Date</th>
+        <th>Age</th>
+        <th>Description</th>
+        <th>Body Part</th>
+        <th>Doctor</th>
+        <th>Facility</th>
+        <th> </th>
+    </thead>
+    <tbody>
+        {% for surg in surgeries %}
+        <tr>
+            <td>{{surg.startdate.strftime("%m/%d/%Y")}}</td>
+            <td>{{surg.age}}</td>
+            <td>{{surg.description}}</td>
+            <td>{{surg.body_part}}</td>
+            {% for doctor in doctors %}
+            {% if surg.doctorfk == doctor.id %}
+            <td>{{doctor.fulldisplayname}}</td>
+            {% endif %}
+            {% endfor %}
+            {% for facility in facilities %}
+            {% if surg.facilityfk == facility.id %}
+            <td>{{facility.name}}</td>
+            {% endif %}
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="6">
+                As of <script>
+                    document.write(new Date().toLocaleDateString());
+                </script>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

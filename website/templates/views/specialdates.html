@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#adddates">
+    Add Special Date
+</button>
+
+<table class="table table-sm table-inverse table-responsive">
+    <thead class="thead-inverse">
+        <tr>
+            <th>Date</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for date in specialdates %}
+            <tr>
+                <td>{{date.date.strftime("%m/%d/%Y")}}</td>
+                <td>{{date.holiday}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="adddates" tabindex="-1" role="dialog" aria-labelledby="addDatesID" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Special Date</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form class="row" action="{{url_for('views.special_dates')}}" method="post">
+                        <div class="col">
+                            <label class="form-label" for="date">Date</label>
+                            <input class="form-control" type="date" name="date" id="date">
+                        </div>
+                        <div class="col">
+                            <label class="form-label" for="holiday">Description</label>
+                            <input class="form-control" type="text" name="holiday" id="holiday">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label" for="rep">Repeate?</label>
+                            <input class="form-check" type="checkbox" name="rep" id="rep">
+                        </div>
+                        <div class="col-6">
+                            <fieldset class="form-group row">
+                                <legend class="col-form-label col-sm-2 float-sm-left pt-0">How Often</legend>
+                                <div class="col-sm-10">
+                                  <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="gridRadios" id="Monthly" value="Monthly">
+                                    <label class="form-check-label" for="Monthly">
+                                      Monthly
+                                    </label>
+                                  </div>
+                                  <div class="form-check disabled">
+                                    <input class="form-check-input" type="radio" name="gridRadios" id="Yearly" value="Yearly" checked>
+                                    <label class="form-check-label" for="Yearly">
+                                      Yearly
+                                    </label>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

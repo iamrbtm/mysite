@@ -1,0 +1,73 @@
+{% extends "health/health-div.html" %}
+
+{% block title %}
+{{current_user.username}} Medications
+{% endblock %}
+
+{% block action_items %}
+<a href="/deletingMed/{{meds.id}}" class="dropdown-item text-danger" role="button"><i class="fas fa-trash-alt"></i>
+    Delete {{meds.name}}</a>
+{% endblock %}
+
+{% block content %}
+<form action="/health/medupdate/{{meds.id}}" , method="POST" , class="row">
+    <div class="col-5">
+        <label class="form-label" for="name">Medication Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{meds.name}}">
+    </div>
+    <div class="col-4">
+        <label class="form-label" for="dose">Dose</label>
+        <input type="text" class="form-control" name="dose" id="dose" value="{{meds.dose}}">
+    </div>
+    <div class="col-3">
+        <label class="form-label" for="dose">Active?</label>
+        <input type="text" class="form-control" name="active" id="active" value="{{meds.active}}" list="TrueFalse">
+        <datalist id="TrueFalse" >
+            <option class="form-control">True</option>
+            <option class="form-control">False</option>
+        </datalist>
+    </div>
+    <div class="col-4">
+        <label class="form-label" for="howoften">How Often</label>
+        <input type="text" class="form-control" id="howoften" name="howoften" value="{{meds.how_often}}">
+    </div>
+    <div class="col-4">
+        <label class="form-label" for="num_filled_days">How many days was this filled</label>
+        <input type="text" class="form-control" id="num_filled_days" name="num_filled_days"
+            value="{{meds.num_filled_days}}">
+    </div>
+    <div class="col-4">
+        <label class="form-label" for="reason_for_taking">Reason for taking</label>
+        <input type="text" class="form-control" id="reason_for_taking" name="reason_for_taking"
+            value="{{meds.reason_for_taking}}">
+    </div>
+    <div class="col-4">
+        <label class="form-label" for="doctor">Doctor</label>
+        <select class="form-select" name="doctor" id="doctor">
+            {% for doctor in doctors %}
+            <option value="{{doctor.id}}" {{'selected' if doctor.id==meds.doctorfk}}>{{doctor.fulldisplayname}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-4">
+        <label class="form-label" for="rx">Pharmacy</label>
+        <select class="form-select" name="rx" id="rx">
+            {% for pharm in pharms %}
+            <option value="{{pharm.id}}" {{'selected' if pharm.id==meds.pharmacy|int}}>{{pharm.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-4">
+        <label class="form-label" for="lastordered">Last Ordered</label>
+        <input type="date" class="form-control" id="lastordered" name="lastordered"
+            value="{{meds.last_refilled.strftime('%Y-%m-%d')}}">
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <br>
+            <input type="hidden" name='thisuserid' value="{{current_user.id}}">
+            <input class="btn btn-primary" type="submit" name='facSubmit' value="Edit Medication">
+        </div>
+    </div>
+</form>
+{% endblock %}

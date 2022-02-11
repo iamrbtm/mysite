@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block submenu %}
+<nav class="navbar navbar-expand-md navbar-dark bg-dark pmd-navbar pmd-z-depth fixed-top" style="margin-top: 56px;">
+    <a class="navbar-brand" href="#">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" width="25px"
+            height="25px" style="fill: azure">
+            <g>
+                <path
+                    d="M638,401.6c0-74.5-61.9-135.1-138-135.1c-76.1,0-138,60.6-138,135.1c0,74.5,61.9,135.1,138,135.1C576.1,536.7,638,476.1,638,401.6z" />
+                <path
+                    d="M500,10C229.4,10,10,229.4,10,500c0,270.6,219.4,490,490,490c270.6,0,490-219.4,490-490C990,229.4,770.6,10,500,10z M720.9,766.8l-0.4-3.8c-12.4-110-107.2-193-220.4-193c-113.2,0-208,83-220.4,193l-0.4,3.8h-33.9l0.5-4.8c9.9-97.2,78.7-181.2,172.6-212.3c-55.1-29.2-90.2-86.3-90.2-148.2c0-92.8,77.1-168.4,171.8-168.4c94.7,0,171.8,75.5,171.8,168.4c0,61.9-35,118.9-90.2,148.2c94,31.1,162.8,115.1,172.6,212.3l0.5,4.8H720.9z" />
+            </g>
+        </svg>
+         Personal</a>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04"
+        aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample04">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/vehicle/vehicle">Vehicles</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/personal/wifi">Wifi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/personal/housinghistory">Housing History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/personal/grave">Grave Markers</a>
+            </li>
+            <li>
+                {% block extra_menu_items %}
+                {% endblock extra_menu_items %}
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropleft">
+                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" role="button"
+                    data-toggle="dropdown" aria-expanded="false">
+                    <span>&#8942; Action</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    {% block action_items %}
+                    {% endblock action_items %}
+                </div>
+            </li>
+    </div>
+</nav>
+{% endblock %}
+
+{% block title %}
+{{User.username}} Health Information
+{% endblock %}
+
+{% block content %}
+{% block header %}
+
+{% endblock %}
+
+{% block menu %}
+{% endblock%}
+
+
+
+
+{% endblock %}

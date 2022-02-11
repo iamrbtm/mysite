@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hosptial_Stays</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        .header {
+            position: static;
+            top: 0;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+        }
+
+        body {
+            position: relative;
+            top: 75px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="text-black h5">
+            Hospitalizations for {{current_user.firstname}} {{current_user.lastname}}
+        </div>
+        <div class="h6">
+            <p style="font-size: 14px;">DOB: {{current_user.dob.strftime("%m/%d/%y") }}</p>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-sm">
+        <thead>
+            <th>Dates</th>
+            <th>Length</th>
+            <th>Reason</th>
+            <th>Doctor</th>
+            <th>Facility</th>
+            <th></th>
+        </thead>
+        <tbody>
+            {% for stay in stays %}
+            <tr>
+                <td>{{stay.datestart.strftime("%m/%d/%y")}} -
+                        {{stay.dateend.strftime("%m/%d/%y")}}</td>
+                <td>
+                    {% for lgh in los %}
+                    {% if lgh['id'] == stay.id %}
+                    {{lgh['stay']}}
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{stay.reason}}</td>
+                <td>
+                    {% for doctor in doctors  %}
+                    {% if stay.doctorfk == doctor.id %}
+                    {{doctor.fulldisplayname}}
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for facility in facilities  %}
+                    {% if stay.facilityfk == facility.id %}
+                    {{facility.name}}
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>
+                    As of <script>
+                        document.write(new Date().toLocaleDateString());
+                    </script>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

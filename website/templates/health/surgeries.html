@@ -1,0 +1,102 @@
+{% extends "health/health-div.html" %}
+
+{% block title %}
+{{current_user.username}} Surgeries
+{% endblock %}
+
+{% block extra_menu_items %}
+{% endblock extra_menu_items %}
+
+{% block action_items %}
+<button type="button" class="dropdown-item" data-toggle="modal" data-target="#modelId">Add Surgery</button>
+<div class="dropdown-divider"></div>
+<a class="dropdown-item " href="{{url_for('health.surgerylist')}}">Surgery List</a>
+{% endblock action_items %}
+
+{% block content %}
+<!-- EXISTING DATA IN DB -->
+<table class="table table-hover table-striped table-responsive">
+    <thead>
+        <th>Start Date</th>
+        <th>Age</th>
+        <th>Description</th>
+        <th>Body Part</th>
+        <th>Doctor</th>
+        <th>Facility</th>
+    </thead>
+    <tbody>
+        {% for surg in surgeries %}
+        <tr>
+            <td><a href="{{url_for('health.surgeries_update', id=surg.id)}}" class="btn btn-sm">{{surg.startdate.strftime("%m/%d/%Y")}}</a></td>
+            <td>{{surg.age}}</td>
+            <td>{{surg.description}}</td>
+            <td>{{surg.body_part}}</td>
+            {% for doctor in doctors %}
+            {% if surg.doctorfk == doctor.id %}
+            <td>{{doctor.fulldisplayname}}</td>
+            {% endif %}
+            {% endfor %}
+            {% for facility in facilities %}
+            {% if surg.facilityfk == facility.id %}
+            <td>{{facility.name}}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/health/surgeries" method="post" class="row">
+                    <div class="col-6">
+                        <label class="form-label" for="sdate">Date</label>
+                        <input hidden type="text" class="form-control" name="name" id="name">
+                        <input type="date" class="form-control" name="sdate" id="sdate">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="bodypart">Body Part</label>
+                        <input type="text" class="form-control" name="bodypart" id="bodypart">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label" for="desc">Surgery Details <span class="small">(What did they
+                                do)</span></label>
+                        <textarea class="form-control" name="desc" id="desc" rows="3"></textarea>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="doctor">Surgon</label>
+                        <select name="doctor" id="doctor" class="form-select">
+                            {% for doctor in doctors %}
+                            <option value="{{doctor.id}}">{{doctor.fulldisplayname}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="facility">Facility</label>
+                        <select name="facility" id="facility" class="form-select">
+                            {% for facility in facilities %}
+                            <option value="{{facility.id}}">{{facility.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" name="thisuserid" value="{{current_user.id}}">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Surgery</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

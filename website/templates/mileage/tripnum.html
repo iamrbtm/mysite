@@ -1,0 +1,106 @@
+{% extends "health/health-div.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<!-- List of Trips -->
+<div class="col-12">
+    <table class="table table-bordered">
+        <thead>
+            <th>Date <br>Trip Number <br> <small>Notes</small></th>
+            <th></th>
+            <th>Origin Address</th>
+            <th>Destination Address</th>
+            <th>Mileage</th>
+            <th>Price</th>
+        </thead>
+        <tbody>
+            {% for trip in trips %}
+            {% if trip.printed == True %}
+            <tr class="table-danger">
+                {% else %}
+            <tr>
+                {% endif %}
+                <td>
+                    <small>{{trip.date.strftime("%a")}}</small>
+                    {{trip.date.strftime("%m/%d/%Y")}} @ {{trip.time.strftime('%I:%M %p')}}
+                    <br>
+                    {% if trip.tripnumber != "" %}
+                    {% if trip.printed == True %}
+                    Trip Number: {{trip.tripnumber}} <br>
+                    {% else %}
+                    <a href="{{url_for('mileage.tripnumremove', id=trip.id)}}" class="text-danger">X</a>
+                    Trip Number: {{trip.tripnumber}} <br>
+                    {% endif %}
+                    {% else %}
+                    <form action="{{url_for('mileage.tripnumadd', id=trip.id)}}" method="post" style="width: 250px;">
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="text" class="form-control" name="tripnum" id="tripnum"
+                                    placeholder="Enter Trip Number">
+                            </div>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
+                    {% for cat in catagories %}
+                    {% if cat.id == trip.catagoryfk %}
+                    <small>{{cat.catagoryname}}</small>
+                    {% endif %}
+                    {% endfor %}
+                    {% if trip.notes != None%}
+                    <br><small class="text-danger">{{trip.notes|upper}}</small>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if trip.returnleg == True %}
+                    <img src="{{url_for('static', filename='images/roundtrip.png')}}" width="25px" height="25px">
+                    {% elif trip.threeway == True %}
+                    <img src="{{url_for('static', filename='images/threeway.png')}}" width="25px" height="25px">
+                    {% else %}
+                    <img src="{{url_for('static', filename='images/oneway.png')}}" width="25px" height="25px">
+                    {% endif %}
+
+                    {% for cat in catagories %}
+                    {% if cat.id == trip.catagoryfk%}
+                    <div style="width: 25px; height:25px;">
+                        {{cat.imgcode|safe}}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for loc in facilities %}
+                    {% if loc.id == trip.originfk %}
+                    {{loc.name}} <br>
+                    {{loc.address}} <br>
+                    {{loc.city}}, {{loc.state}}  {{loc.zip}}
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for loc in facilities %}
+                    {% if loc.id == trip.destinationfk %}
+                    {{loc.name}} <br>
+                    {{loc.address}} <br>
+                    {{loc.city}}, {{loc.state}}  {{loc.zip}} <br>
+                    {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{trip.mileage}}</td>
+                <td>
+                    {% for cat in catagories %}
+                    {% if cat.id == trip.catagoryfk %}
+                    {{"$%.2f"|format(trip.mileage * cat.pricepermile)}}
+                    {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

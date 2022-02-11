@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedList</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        .header {
+            position:static;
+            top: 0;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+        }
+
+        body {
+            position: relative;
+            top: 75px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="text-black h5">
+            {{current_user.firstname}} {{current_user.lastname}} Medications
+        </div>
+        <div class="h6">
+            <p style="font-size: 14px;">DOB: {{current_user.dob.strftime("%m/%d/%y") }}</p>
+        </div>
+    </div>
+        <div>
+            <table class="table table-bordered table-sm">
+                <thead>
+                    <th>Medication</th>
+                    <th>Doctor</th>
+                    <th>Dose</th>
+                    <th>When</th>
+                    <th>Reason</th>
+                    <th>Last Refilled</th>
+                </thead>
+                <tbody>
+                    {% for medication in medications %}
+                    <tr>
+                        <td>{{medication.name}}</td>
+                        <td>{% for doctor in doctors %}{% if doctor.id == medication.doctorfk %}{{doctor.fulldisplayname}}{% endif %}{% endfor %}
+                        </td>
+                        <td>{{medication.dose}}</td>
+                        <td>{{medication.how_often}}</td>
+                        <td>{{medication.reason_for_taking}}</td>
+                        <td>{{medication.last_refilled.strftime("%m-%d-%Y")}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            As of <script>
+                                document.write(new Date().toLocaleDateString());
+                            </script>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="text-black h5">
+                {{current_user.firstname}} {{current_user.lastname}} Allergies
+            </div>
+            <div class="h6">
+                <p style="font-size: 14px;">DOB: {{current_user.dob.strftime("%m/%d/%y") }}</p>
+            </div>
+            <table class="table table-bordered table-sm">
+                <thead>
+                    <th>Name of Medication</th>
+                    <th>Reaction</th>
+                    <th>Date Discovered</th>
+                </thead>
+                <tbody>
+                    {% for allergy in allergies %}
+                    <tr>
+                        <td>{{allergy.name}}</td>
+                        <td>{{allergy.reaction}}</td>
+                        <td>{{allergy.dateadded.strftime("%m-%d-%Y")}}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            As of <script>
+                                document.write(new Date().toLocaleDateString());
+                            </script>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</body>
+
+</html>

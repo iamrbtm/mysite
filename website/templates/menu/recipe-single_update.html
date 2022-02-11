@@ -1,0 +1,310 @@
+{% extends "menu/menu-div.html" %}
+
+{% block style %}
+{% endblock %}
+
+{% block title %}
+Guill Menu - Recipe for {{dish.name}}
+{% endblock %}
+
+{% block proheader %}
+{{dish.name}}
+{% endblock %}
+
+{% block submenu %}
+{{ super() }}
+{% endblock %}
+
+{% block action_items %}
+<a class="dropdown-item text-danger" href="{{url_for('menu.recipe_delete', id=dish.id)}}">Delete {{dish.name}}</a>
+<a class="dropdown-item" href="#">Print</a>
+<a class="dropdown-item" href="#">Email</a>
+{% endblock action_items %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <div class="text-center" id="Picture and Information">
+        {% if dish.pictureURL %}
+        <img src="{{dish.pictureURL}}" class='' alt="Picture Of Dish" height="200px">
+        {% else %}
+        <img src="https://image.shutterstock.com/image-vector/ui-image-placeholder-wireframes-apps-260nw-1037719204.jpg"
+          class='' alt="Picture Of Dish">
+        {% endif %}
+        <div class="row">
+          <!-- image button for modal -->
+          <div class="col-2"> </div>
+          <div class="col-8">
+            <button type="button" class="col-8 btn btn-info" data-toggle="modal" data-target="#imageModal"><svg
+                xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="25px" height="25px"
+                style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                viewBox="0 0 2048 2048" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                  <style type="text/css">
+                    .fil1 {
+                      fill: none
+                    }
+
+                    .fil0 {
+                      fill: #212121;
+                      fill-rule: nonzero
+                    }
+                  </style>
+                </defs>
+                <g id="Layer_x0020_1">
+                  <metadata id="CorelCorpID_0Corel-Layer" />
+                  <g id="_559824504">
+                    <path id="_559824840" class="fil0"
+                      d="M288 462.52l1472 0c17.6728,0 32.0008,14.328 32.0008,32.0008l0 1058.96c0,17.6728 -14.328,32.0008 -32.0008,32.0008l-1472 0c-17.6728,0 -32.0008,-14.328 -32.0008,-32.0008l0 -1058.96c0,-17.6728 14.328,-32.0008 32.0008,-32.0008zm1440 64.0016l-1408 0 0 994.958 1408 0 0 -994.958z" />
+                    <path id="_559825008" class="fil0"
+                      d="M440.758 594.063l1166.48 0c17.6728,0 32.0008,14.328 32.0008,32.0008l0 795.873c0,17.6728 -14.328,32.0008 -32.0008,32.0008l-1166.48 0c-17.6728,0 -32.0008,-14.328 -32.0008,-32.0008l0 -795.873c0,-17.6728 14.328,-32.0008 32.0008,-32.0008zm1134.48 64.0016l-1102.48 0 0 731.872 1102.48 0 0 -731.872z" />
+                    <path id="_559824816" class="fil0"
+                      d="M1376.67 686.063c38.4721,0 73.3075,15.5988 98.5217,40.813 25.2142,25.2142 40.813,60.0497 40.813,98.5217 0,38.4721 -15.5988,73.3075 -40.813,98.5217 -25.2142,25.2142 -60.0497,40.813 -98.5217,40.813 -38.4721,0 -73.3075,-15.5988 -98.5217,-40.813 -25.2142,-25.2142 -40.813,-60.0497 -40.813,-98.5217 0,-38.4721 15.5988,-73.3075 40.813,-98.5217 25.2154,-25.2166 60.0485,-40.813 98.5217,-40.813zm53.2713 86.0635c-13.6288,-13.6288 -32.465,-22.0618 -53.2713,-22.0618 -20.8063,0 -39.6414,8.43072 -53.2713,22.0618 -13.6288,13.6288 -22.0618,32.465 -22.0618,53.2713 0,20.8063 8.43308,39.6426 22.0618,53.2713 13.6288,13.6288 32.465,22.0618 53.2713,22.0618 20.8063,0 39.6426,-8.43308 53.2713,-22.0618 13.6288,-13.6288 22.0618,-32.465 22.0618,-53.2713 0,-20.8063 -8.43308,-39.6426 -22.0618,-53.2713z" />
+                    <path id="_559824360" class="fil0"
+                      d="M960.582 1453.94l-461.368 0c-17.6728,0 -32.0008,-14.328 -32.0008,-32.0008 0,-7.38898 2.50748,-14.1921 6.71339,-19.6099l229.152 -365.905 27 16.8756 -27.1205 -16.9843c9.37914,-14.9776 29.1272,-19.5154 44.1048,-10.1362 5.21811,3.26811 9.16772,7.79646 11.7047,12.9413l229.16 365.919 0.135827 -0.0850394c9.37914,14.9776 4.84134,34.7256 -10.1362,44.1048 -5.39764,3.38032 -11.4165,4.95355 -17.3445,4.88032zm-403.759 -64.0016l346.51 0 -173.255 -276.65 -173.255 276.65z" />
+                    <path id="_559824552" class="fil0"
+                      d="M1299.64 1453.94l-338.7 0c-12.5941,0 -23.4862,-7.27678 -28.7091,-17.8547l-136.276 -217.602 -0.135827 0.0850394c-7.33701,-11.7165 -6.15827,-26.3516 1.87323,-36.6591l167.778 -267.904 27 16.8756 -27.1205 -16.9843c9.37914,-14.9776 29.1272,-19.5154 44.1048,-10.1362 5.2193,3.26811 9.16772,7.79646 11.7047,12.9413l305.825 488.338 0.135827 -0.0850394c9.37914,14.9776 4.84134,34.7256 -10.1362,44.1048 -5.39764,3.38032 -11.4165,4.95355 -17.3445,4.88032zm-321.173 -64.0016l263.923 0 -249.92 -399.069 -131.962 210.715 117.959 188.354z" />
+                  </g>
+                </g>
+                <rect class="fil1" width="2048" height="2048" />
+              </svg> Image</button>
+          </div>
+          <div class="col-2"> </div>
+        </div>
+      </div>
+      <div class="row">
+        <form action="/menu/recipe/{{dish.id}}/update" method="POST" class="row">
+          <div class="col-6">
+            <select name="cat" id="cat" class="selectpicker" multiple title="Choose catagory...">
+              {% for cat in catagories %}
+              <option value="{{cat.id}}">{{cat.catagory}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-6">
+            <select name="tag" id="tag" class="selectpicker" multiple title="Choose Tag...">
+              {% for tag in tags %}
+              <option value="{{tag.id}}">{{tag.tag}}</option>
+              {% endfor %}
+            </select>
+          </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="row">
+        <!-- recipe information -->
+        <div class="col-6">
+          <label class="form-label" for="name">Name</label>
+          <input class="form-control" type="text" name="name" value="{{dish.name}}">
+        </div>
+        <div class="col-6">
+          <label class="form-label" for="orgurl">Original URL</label>
+          <input class="form-control" type="url" name="orgurl" value="{{dish.origurl}}">
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="description">Description</label>
+          <textarea class="form-control" name="description">{{dish.description}}</textarea>
+        </div>
+        <div class="col-6">
+          <label class="form-label" for="servings">Servings</label>
+          <input class="form-control" type="text" name="servings" value="{{dish.numServings}}">
+        </div>
+        <div class="col-6">
+          <label class="form-label" for="servingSize">Serving Size</label>
+          <input class="form-control" type="text" name="servingSize" value="{{dish.servingSize}}">
+        </div>
+        <div class="col-4">
+          <label class="form-label" for="prepTime">Prep Time</label>
+          <input class="form-control" type="text" name="prepTime" value="{{dish.prepTime}}">
+        </div>
+        <div class="col-4">
+          <label class="form-label" for="cooktime">Cook Time</label>
+          <input class="form-control" type="text" name="cooktime" value="{{dish.cookTime}}">
+        </div>
+        <div class="col-4">
+          <label class="form-label" for="cookTemp">Cook Temp</label>
+          <input class="form-control" type="text" name="cookTemp" value="{{dish.cookTemp}}">
+        </div>
+        <div class="col-2">
+          <button class="btn btn-primary" type="submit" name="sub" value="maindata">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4" id="Recipe">
+      <div class="float-start">
+        <h6 class="display-6"><strong>Recipe</strong></h6>
+      </div>
+
+      <table class="table table-sm table-responsive">
+        <thead>
+          <tr>
+            <td>Ingredient</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for recipe in recipes %}
+          <tr>
+            <td><a href="{{url_for('menu.deleteIng',recID=recipe.id, dishID=dish.id)}}" class="btn text-danger"
+                tabindex="-1" role="button"><i class="fas fa-trash-alt"></i></a><span
+                class="lead text-body">{{recipe.qty}} {{recipe.measurement}} {{recipe.ing}}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <!-- Add Recipe Item -->
+      <div class="col-12 float-start">
+        <button type="button" class="btn btn-primary align-bottom" data-toggle="modal" data-target="#Ing"><i
+            class="fas fa-plus-square"></i> Add Item</button>
+      </div>
+    </div>
+    <div class="col-8" id="Steps">
+      <div class="float-start">
+        <h6 class="display-6 text-left"><b>Steps</b></h6>
+      </div>
+      <!-- Steps -->
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <td>Step</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for step in steps %}
+          <tr>
+            <td><a href="{{url_for('menu.deleteStep',stepID=step.id, dishID=dish.id)}}" class="btn text-danger"
+                tabindex="-1" role="button"><i class="fas fa-trash-alt"></i></a><span
+                class="lead text-body">{{step.step_num}}. {{step.step_text}}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <!-- Add New Step -->
+      <div class="float-start">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"><i
+            class="fas fa-shoe-prints"></i> Add Step</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ingredient Modal -->
+  <div class="modal fade" id="Ing" tabindex="-1" role="dialog" aria-labelledby="IngLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="IngLabel">Add Ingredient</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{{url_for('menu.recipe_update', id=dish.id)}}" method="POST">
+            <div class="row g-3">
+              <div class="col-4">
+                <input type="text" id="qty" name="qty" class="form-control" placeholder="Qty" />
+              </div>
+              <div class="col-4">
+                <input type="text" id="measurement" name="measurement" class="form-control" placeholder="Measurement" />
+              </div>
+              <div class="col-4">
+                <input type="text" id="ing" name="ing" class="form-control" placeholder="Ingredience" />
+              </div>
+              <div class="col-12">
+                <select class="form-control" id="catagory" name='catagory'>
+                  <option value="DidNotSelect">Choose a catagory...</option>
+                  {% for item in shoppingcatagories %}
+                  <option value="{{item}}">{{item}}</option>
+                  {% endfor %}
+              </div>
+              <div class="col-12">
+                <textarea id="notes" name="notes" class="form-control" row="2"></textarea>
+                <input type="hidden" id="dishid" name="dishid" class="form-control" value="{{dish.id}}" />
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="sub" value="ingsave">Save changes</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Step</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="{{url_for('menu.recipe_update', id=dish.id)}}" method="POST">
+            <div class="form-group row g-1">
+              <div class="col-lg-10">
+                <input type="text" id="stepdesc" name="stepdesc" class="form-control"
+                  placeholder="Enter Step Description">
+                <input type="hidden" id="dishid" name="dishid" calss="form-control" value="{{dish.id}}" />
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="sub" value="stepsave">Save changes</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- image modal -->
+  <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="imageModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="url-tab" data-toggle="tab" href="#url" role="tab" aria-controls="url"
+                aria-selected="true">URL</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="upload-tab" data-toggle="tab" href="#upload" role="tab" aria-controls="upload"
+                aria-selected="false">Upload</a>
+            </li>
+          </ul>
+          <form action="{{url_for('menu.recipe_update', id=dish.id)}}" enctype=multipart/form-data method="POST">
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="url" role="tabpanel" aria-labelledby="url-tab">
+                <label class="form-label" for="picurl">Picture URL</label>
+                <input class="form-control" type="text" name="picurl" class="form-control" value="{{dish.pictureURL}}">
+              </div>
+              <div class="tab-pane fade" id="upload" role="tabpanel" aria-labelledby="upload-tab">
+                <label class="form-label" for="picfile">Upload Picture</label>
+                <input class="form-control-file" type="file" name="picfile" class="form-control">
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="sub" value="imagedata">Save changes</button>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endblock %}

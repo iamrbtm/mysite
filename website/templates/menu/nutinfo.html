@@ -1,0 +1,75 @@
+<h6 class="display-6"><strong>Nutrition</strong></h6>
+        <table>
+          <thead>
+              <tr>
+              <th class="small">
+                Amount Per Serving
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+            <td class="col-11"><b>Calories</b></td>
+            <td class="col-1">{{ (nutrition.calories/dish.numServings) | round(1) }}</td>
+          </tr>
+          <tr>
+            <td class="col-8 small">&emsp;Cal from Fat</td>
+            <td class="col-2 small">{{ ((nutrition.fat_total/dish.numServings)*9) | round(1) }}</td>
+          </tr>
+          <tr>
+            <td class="col-11"><b>Total Fat</b></td>
+            <td class="col-1">{{ (nutrition.fat_total/dish.numServings) | round(1) }}g</td>
+            <td class="col-2">{{ (((nutrition.fat_total/dish.numServings)/65)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11 small">&emsp;Sat Fat</td>
+            <td class="col-1 small">{{ (nutrition.fat_sat/dish.numServings) | round(1) }}g</td>
+            <td class="col-2 small">{{ (((nutrition.fat_sat/dish.numServings)/20)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11 small">&emsp;Trans Fat</td>
+            <td class="col-1 small">{{ (nutrition.fat_trans/dish.numServings) | round(1) }}g</td>
+            <td class="col-2 small">{{ (((nutrition.fat_trans/dish.numServings)/2)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11"><b>Cholesterol</b></td>
+            <td class="col-1">{{ (nutrition.cholesterol/dish.numServings) | round(1) }}mg</td>
+            <td class="col-2">{{ (((nutrition.cholesterol/dish.numServings)/300)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11"><b>Sodium</b></td>
+            <td class="col-1">{{ (nutrition.sodium/dish.numServings) | round(1) }}mg</td>
+            <td class="col-2">{{ (((nutrition.sodium/dish.numServings)/2400)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11"><b>Potassium</b></td>
+            <td class="col-1">{{ (nutrition.potassium/dish.numServings) | round(1) }}mg</td>
+            <td class="col-2">{{ (((nutrition.potassium/dish.numServings)/4700)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11"><b>Carbohydrate</b></td>
+            <td class="col-1">{{ (nutrition.carb_total/dish.numServings) | round(1) }}g</td>
+            <td class="col-2">{{ (((nutrition.carb_total/dish.numServings)/300)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11 small">&emsp;Fiber</td>
+            <td class="col-1 small">{{ (nutrition.carb_fiber/dish.numServings) | round(1) }}g</td>
+            <td class="col-2 small">{{ (((nutrition.carb_fiber/dish.numServings)/25)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11 small">&emsp;Sugar</td>
+            <td class="col-1 small">{{ (nutrition.carb_sugar/dish.numServings) | round(1) }}g</td>
+            <td class="col-2 small">{{ (((nutrition.carb_sugar/dish.numServings)/50)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11 small">&emsp;Net Carb</td>
+            <td class="col-1 small">{{ ((nutrition.carb_total-nutrition.carb_fiber)/dish.numServings) | round(1) }}g</td>
+            <td class="col-2 small">{{ ((((nutrition.carb_total-nutrition.carb_fiber)/dish.numServings)/300)*100) | round(1) }}%</td>
+          </tr>
+          <tr>
+            <td class="col-11"><b>Protein</b></td>
+            <td class="col-1">{{ (nutrition.protein/dish.numServings) | round(1) }}g</td>
+            <td class="col-2">{{ (((nutrition.protein/dish.numServings)/46)*100) | round(1) }}%</td>
+          </tr>
+          </tbody>
+        </table>

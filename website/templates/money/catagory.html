@@ -1,0 +1,118 @@
+{% extends "money/money_div.html" %}
+
+{% block title %}
+Catagory
+{% endblock %}
+
+{% block action_items %}
+<button type="button" class="dropdown-item" data-toggle="modal" data-target="#modelId">Add Catagory</button>
+{% endblock action_items %}
+
+{% block content %}
+<h3>Catagories</h3>
+
+<div class="row">
+    <div class="col-6">
+        <h4>Income</h4>
+        <table class="table table-sm table-inverse table-responsive">
+            <thead>
+                <th class="col-2">Catagory</th>
+                <th class="col-2">Used # of times</th>
+                <th class="col-2">Toal Amount</th>
+            </thead>
+            <tbody>
+                {% for cat in cats %}
+                {% if cat.inc == True %}
+                <tr>
+                    <td>{{cat.catagory}}</td>
+                    {% for cnt in cntinc %}
+                    {% if cnt[0] == cat.id %}
+                    <td>{{ cnt[1] }}</td>
+                    <td>{{ "${:,.2f}".format(cnt[2]) }}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><strong>{{ "${:,.2f}".format(inctotal) }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="col-6">
+        <h4>Expenses</h4>
+        <table class="table table-sm table-inverse table-responsive">
+            <thead>
+                <th class="col-2">Catagory</th>
+                <th class="col-2">Used # of times</th>
+                <th class="col-2">Toal Amount</th>
+            </thead>
+            <tbody>
+                {% for cat in cats %}
+                {% if cat.exp == True %}
+                <tr>
+                    <td>{{cat.catagory}}</td>
+                    {% for cnt in cntexp %}
+                    {% if cnt[0] == cat.id %}
+                    <td>{{cnt[1]}}</td>
+                    <td>{{"${:,.2f}".format(cnt[2])}}</td>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td><strong>{{ "${:,.2f}".format(exptotal) }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Catagory</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('money.catagory')}}" method="post" class="row">
+                    <div class="col-12">
+                        <label for="catagory">Catagory Name</label>
+                        <input type="text" class="form-control" name="catagory" id="catagory" placeholder="Catagory">
+                    </div>
+                    <div class="col-12">
+                        <br><label for="exp">Type of Catagory</label> <br>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="type" id="exp" value="exp"> Expenses
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="type" id="inc" value="inc"> Income
+                            </label>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

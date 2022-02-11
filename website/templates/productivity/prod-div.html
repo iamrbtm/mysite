@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block submenu %}
+<nav class="navbar navbar-expand-md navbar-dark bg-dark pmd-navbar pmd-z-depth fixed-top" style="margin-top: 56px;">
+    <a class="navbar-brand" href="#">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve" style="fill: azure;">
+            <g><g transform="translate(0.000000,511.000000) scale(0.100000,-0.100000)"><path d="M1207.5,4533.4c-411.3-90-769-368.4-957.5-747.6C91.5,3466.7,100.1,3678.7,100.1,112.2c0-2729,6.4-3223.8,32.1-3352.3c81.4-392,377-769,741.2-948.9c334.2-164.9,51.4-156.4,4202.7-149.9l3710.1,6.4l156.4,57.8c432.7,156.4,756.1,482,897.5,901.8l60,175.6V112.2v3309.5l-57.8,173.5c-145.7,424.1-479.8,758.3-901.8,901.8l-175.7,60l-3705.8,4.3C1865.1,4563.4,1333.9,4559.1,1207.5,4533.4z M8790.4,3798.7c132.8-60,291.3-220.6,355.6-362l47.1-100.7V1322.4V-691.1L9131-851.7c-246.3-644.7-709-1197.4-1366.6-1628c-351.3-233.5-886.8-479.8-1336.6-619.1l-214.2-66.4l-2452.7,4.3l-2450.5,6.4l-139.2,77.1c-92.1,49.3-167.1,111.4-218.5,182.1C796.2-2691.8,807-2923.1,807,339.2c0,2656.2,4.3,2951.8,34.3,3043.9c72.8,212.1,224.9,362,443.4,437c105,38.5,293.5,38.5,3752.9,34.3l3641.5-4.3L8790.4,3798.7z M9199.5-2297.6c-6.4-349.2-8.6-368.4-66.4-475.5c-72.8-141.4-179.9-248.5-321.3-323.4l-111.4-57.8l-599.8-6.4l-599.8-4.3l182.1,98.5c559.1,299.9,1056,719.7,1398.8,1176l111.4,152.1l6.4-98.5C9203.8-1890.6,9203.8-2096.3,9199.5-2297.6z"/><path d="M6671.9,2755.5c-30-47.1-475.5-792.6-991.8-1658c-516.3-865.4-948.9-1587.3-963.9-1602.3c-19.3-21.4-128.5,119.9-522.7,689.7c-272,394.1-503.4,721.9-512,728.3c-8.6,4.3-280.6-192.8-604.1-441.3C2754.1,223.6,2469.2,9.4,2445.6-7.8c-40.7-27.8-25.7-45,257.1-332c164.9-164.9,681.2-676.9,1150.3-1135.3l848.2-835.4L6267.1-671.8L7835,969l-537.7,914.7c-295.6,505.5-546.2,925.4-556.9,936.1C6729.7,2828.3,6699.8,2800.5,6671.9,2755.5z"/></g></g>
+            </svg>
+         Productivity</a>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04"
+        aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample04">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/productivity/tasks/1">Tasks</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/productivity/goals">Goals</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/productivity/projects">Projects</a>
+            </li>
+            <li>
+                {% block extra_menu_items %}
+                {% endblock extra_menu_items %}
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropleft">
+                <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" role="button"
+                    data-toggle="dropdown" aria-expanded="false">
+                    <span>&#8942; Action</span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    {% block action_items %}
+                    {% endblock action_items %}
+                </div>
+            </li>
+    </div>
+</nav>
+{% endblock %}
+
+{% block title %}
+{{User.username}} Health Information
+{% endblock %}
+
+{% block content %}
+{% block header %}
+
+{% endblock %}
+
+{% block menu %}
+{% endblock%}
+
+
+
+
+{% endblock %}

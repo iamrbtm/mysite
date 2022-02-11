@@ -1,0 +1,195 @@
+{% extends "money/money_div.html" %}
+
+{% block title %}
+{{budget.date_start.strftime('%B %Y')}} Budget
+{% endblock %}
+
+{% block action_items %}
+<button type="button" class="dropdown-item" data-toggle="modal" data-target="#modelId">Add Catagory</button>
+{% endblock action_items %}
+
+{% block content %}
+<h3>{{budget.date_start.strftime('%B %Y')}} Budget</h3>
+
+<h4>Difference</h4>
+<table class="table table-sm table-inverse table-responsive">
+    <thead>
+        <tr>
+            <th>Income</th>
+            <th>Expenses</th>
+            <th>Difference</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{"${:,.2f}".format(incometotal)}}</td>
+            <td>{{"${:,.2f}".format(expensetotal)}}</td>
+            <td>{{"${:,.2f}".format(incometotal - expensetotal)}}</td>
+        </tr>
+    </tbody>
+</table>
+<div class="row">
+    <div class="col-6">
+        <h4>Income</h4>
+        <table class="table table-sm table-inverse table-responsive">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Date</th>
+                    <th>Catagory</th>
+                    <th>Amount</th>
+                    <th>Source</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = [0] %}
+                {% for cat in cats %}
+                {% for income in incomes %}
+                {% if cat.inc == True %}
+                {% if cat.id == income.catagory %}
+                <tr>
+                    {% if income.date == None %}
+                    <td></td>
+                    {% else %}
+                    <td>{{income.date.strftime('%m/%d/%Y')}}</td>
+                    {% endif %}
+                    <td>{{cat.catagory}}</td>
+                    <td>{{"${:,.2f}".format(income.amount)}}</td>
+                    <td>{{income.notes}}</td>
+                    <td><a href="{{url_for('money.delete_income_line_item', id = budget.id, li=income.id)}}" class="text-danger">X</a></td>
+                </tr>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                <form action="{{url_for('money.budget_single_update', id=budget.id)}}" method="post">
+                    <tr>
+                        <td><input type="date" name="incdate" id="incdate" style="width: 100px;" class="form-control"></td>
+                        <td>
+                            <select class="form-control" name="inccat" id="inccat" style="width: 150px;">
+                                {% for cat in cats %}
+                                {% if cat.inc == True %}
+                                <option value="{{cat.id}}">{{cat.catagory}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" step="0.01" name="incamount" id="incamount" style="width: 100px;" class="form-control"></td>
+                        <td><input type="text" name="incsource" id="incsource" style="width: 100px;" class="form-control"></td>
+                        <td><button type="submit" class="btn btn-primary">Submit</button></td>
+                    </tr>
+                </form>
+                <tr>
+                    <td></td>
+                    <td>Total:</td>
+                    <td>
+                        {{"${:,.2f}".format(incometotal)}}
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-6">
+        <h4>Expenses</h4>
+        <table class="table table-sm table-inverse table-responsive">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Due Date</th>
+                    <th>Catagory</th>
+                    <th>Amount</th>
+                    <th>Source</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = [0] %}
+                {% for cat in cats %}
+                {% for expense in expenses %}
+                {% if cat.exp == True %}
+                {% if cat.id == expense.catagory %}
+                <tr>
+                    {% if expense.duedate == None %}
+                    <td></td>
+                    {% else %}
+                    <td>{{expense.duedate.strftime('%m/%d/%Y')}}</td>
+                    {% endif %}
+                    <td scope="row">{{cat.catagory}}</td>
+                    <td>{{"${:,.2f}".format(expense.amount)}}</td>
+                    <td>{{expense.notes}}</td>
+                    <td><a href="{{url_for('money.delete_expense_line_item', id = budget.id, li=expense.id)}}" class="text-danger">X</a></td>
+                </tr>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                <form action="{{url_for('money.budget_single_update', id=budget.id)}}" method="post">
+                    <tr>
+                        <td><input type="date" name="expduedate" id="expduedate" style="width: 100px;" class="form-control"></td>
+                        <td>
+                            <select name="expcat" id="expcat" style="width: 150px;" class="form-control">
+                                {% for cat in cats %}
+                                {% if cat.exp == True %}
+                                <option value="{{cat.id}}">{{cat.catagory}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><input type="number" step="0.01" name="expamount" id="expamount" style="width: 100px;" class="form-control"></td>
+                        <td><input type="text" name="expsource" id="expsource" style="width: 100px;" class="form-control"></td>
+                        <td><button type="submit" class="btn btn-primary">Submit</button></td>
+                    </tr>
+                </form>
+                <tr>
+                    <td></td>
+                    <td>Total:</td>
+                    <td>
+                        {{"${:,.2f}".format(expensetotal)}}
+                    </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Catagory</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('money.catagory')}}" method="post" class="row">
+                    <div class="col-12">
+                        <label for="catagory">Catagory Name</label>
+                        <input type="text" class="form-control" name="catagory" id="catagory" placeholder="Catagory">
+                    </div>
+                    <div class="col-12">
+                        <br><label for="exp">Type of Catagory</label> <br>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="type" id="exp" value="exp"> Expenses
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="radio" name="type" id="inc" value="inc"> Income
+                            </label>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
