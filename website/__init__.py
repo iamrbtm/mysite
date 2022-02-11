@@ -4,7 +4,6 @@ from os import path, getenv, environ, path
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
-from flask_uploads import UploadSet, configure_uploads, IMAGES, ALL
 from flask_debugtoolbar import DebugToolbarExtension
 from dotenv import load_dotenv
 
@@ -13,8 +12,6 @@ from dotenv import load_dotenv
 db = SQLAlchemy()
 DB_NAME = "database.db"
 mail = Mail()
-photos = UploadSet('photos', IMAGES)
-uploads = UploadSet('uploads', ALL)
 
 def create_app():
     mail = Mail()
@@ -24,11 +21,6 @@ def create_app():
     load_dotenv(dotenv_path)
 
     app.debug = True
-    
-    app.config['UPLOADED_PHOTOS_DEST'] = 'website/static/images'
-    app.config['UPLOADED_UPLOADS_DEST'] = 'website/static/uploads'
-    configure_uploads(app, photos)
-    configure_uploads(app, uploads)
 
     app._static_folder = 'static'
     app.config['SECRET_KEY'] = "helloworld"

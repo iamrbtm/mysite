@@ -3,7 +3,7 @@ from flask.helpers import flash
 from flask_login import login_required
 from website.models import *
 from datetime import datetime, timedelta
-from website import db, uploads
+from website import db
 from website.templates.menu.process_menu import *
 from sqlalchemy.sql import func, extract
 import datetime, pdfkit
@@ -215,8 +215,6 @@ def recipe_update(id):
             if formdata['picurl'] == '':
                 pic = request.files['picfile']
                 pic.seek(0)
-                filename = uploads.save(pic)
-                update.pictureURL = url_for('static', filename=f"uploads/{filename}")
             else:
                 update.pictureURL = formdata['picurl']
             db.session.commit()
