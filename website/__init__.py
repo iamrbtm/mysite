@@ -28,8 +28,8 @@ def create_app():
     connect = f"mysql+pymysql://{getenv('DB_USERNAME')}:{getenv('DB_PASSWORD')}@{getenv('DB_HOST')}/{getenv('DB_NAME')}"
     app.config["SQLALCHEMY_DATABASE_URI"] = connect
     
-    toolbar = DebugToolbarExtension(app)
-    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    # toolbar = DebugToolbarExtension(app)
+    # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
     
     app.config['MAIL_SERVER']='smtp.mailtrap.io'
     app.config['MAIL_PORT'] = 2525
