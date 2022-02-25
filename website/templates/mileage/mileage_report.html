@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename = 'css/bootstrap.css')}}">
+    <title>Lob.com Sample 8.5x11 Letter</title>
+    <style>
+        *,
+        *:before,
+        *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 11in;
+            height: 8.5in;
+            margin: 0;
+            padding: 0;
+        }
+
+        @page {
+            page-break-after: always;
+            position: relative;
+            width: 11in;
+            height: 8.5in;
+            size: landscape;
+            counter-increment: page;
+
+            @bottom-right {
+                padding-right: 20px;
+                content: "Page "counter(page);
+            }
+        }
+
+        .page-content {
+            position: absolute;
+            width: 10.625in;
+            height: 8.125in;
+            left: 0.1875in;
+            top: 0.1875in;
+            < !-- background-color: rgba(0, 0, 0, 0.2);
+            -->
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page" id="page">
+        <div class="page-content">
+            <div id="header">
+                <h1>Medical Mileage Report</h1>
+                <p>Patient: {{current_user.firstname}} {{current_user.lastname}}<br>As of:
+                    {{today_date.strftime("%m/%d/%Y %H:%M %p")}}</p>
+            </div>
+            <div id="main content">
+                {% for date, mileage in mileages | groupby('date') %}
+                <h5><b>{{ date.strftime("%A, %B %d, %Y") }}</b></h5>
+                <table class="table table-striped">
+                    {% for mileage in mileages %}
+                    {% if mileage.date == date %}
+                    <tr>
+                        <td width="30%">
+                            {% for item in facilities %}
+                            {% if mileage.originfk == item.id %}
+                            <b>{{item.name}}</b> <br>
+                            {{item.address}} <br>
+                            {{item.city}}, {{item.state}} {{item.zip}}
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td width="30%">
+                            {% for item in facilities %}
+                            {% if mileage.destinationfk == item.id %}
+                            <b>{{item.name}}</b> <br>
+                            {{item.address}} <br>
+                            {{item.city}}, {{item.state}} {{item.zip}}
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td width="25%" align="center">
+                            {% for item in providers %}
+                            {% if mileage.providerfk == item.id %}
+                            <b>{{item.fulldisplayname}}</b>
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td width="15%" align="right">
+                            {% for item in catagories %}
+                            {% if mileage.catagoryfk == item.id %}
+                            {{ mileage.mileage}} * {{item.pricepermile}} = {{mileage.mileage * item.pricepermile}}</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </table>
+                {% endfor %}
+            </div>
+        </div>
+</body>
+
+</html>

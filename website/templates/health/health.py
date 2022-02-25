@@ -571,3 +571,9 @@ def surgeries_update(id):
     doctors = db.session.query(Doctor).filter(Doctor.userid == flask_login.current_user.id).order_by(Doctor.lastname, Doctor.firstname).all()
     facilities = db.session.query(Facility).filter(Facility.userid == flask_login.current_user.id).filter(Facility.type != "Pharmacy").order_by(Facility.name).all()
     return render_template("health/surgeries_update.html", user=User, facilities=facilities, doctors=doctors, surgeries=surgeries)
+
+@health.route("/updatedoc", methods=['GET', 'POST'])
+def updatedoc():
+    from website.utilities import updatedocs
+    updatedocs()
+    return redirect(url_for('health.home'))
