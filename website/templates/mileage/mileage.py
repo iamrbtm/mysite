@@ -6,7 +6,7 @@ from datetime import datetime
 from website import db
 
 # import css_inline, html2text
-from sqlalchemy.sql import desc
+from sqlalchemy.sql import desc, func
 import datetime, os
 from math import ceil
 
@@ -113,7 +113,7 @@ def mileageHome():
         .all()
     )
     catagories = (
-        db.session.query(MileageCatagory)
+        db.session.query(Mileage_catagory)
         .filter_by(userid=flask_login.current_user.id)
         .all()
     )
@@ -248,7 +248,7 @@ def catagory():
         edit_catagory(**formdata)
 
     catagories = (
-        db.session.query(MileageCatagory)
+        db.session.query(Mileage_catagory)
         .filter_by(userid=flask_login.current_user.id)
         .all()
     )
@@ -274,7 +274,7 @@ def mileageTripNum():
         db.session.query(Facility).filter_by(userid=flask_login.current_user.id).all()
     )
     catagories = (
-        db.session.query(MileageCatagory)
+        db.session.query(Mileage_catagory)
         .filter_by(userid=flask_login.current_user.id)
         .all()
     )
@@ -290,17 +290,62 @@ def mileageTripNum():
     )
 
 
+def calctotalcost():
+    totalcost = 0
+    tc = db.session.query(Mileage).filter_by(userid=current_user.id).all()
+
+    for item in tc:
+        cost = item.mileage * item.cats.pricepermile
+        totalcost += cost
+    return totalcost
+
+
 @mileage.route("/report/", methods=["GET"])
 def mileage_report():
 
-    mileages = db.session.query(Mileage).filter(Mileage.userid==current_user.id).order_by(Mileage.legnumber).all()
-    facilities = db.session.query(Facility).filter(Facility.userid==current_user.id).all()
-    providers = db.session.query(Doctor).filter(Doctor.userid==current_user.id).all()
-    catagories = db.session.query(MileageCatagory).filter(MileageCatagory.userid==current_user.id).all()
-    
-    content = {'mileages':mileages, 'facilities':facilities, 'providers':providers, 'catagories':catagories}
+    mileages = (
+        db.session.query(Mileage)
+        .filter(Mileage.userid == current_user.id)
+        .order_by(Mileage.legnumber)
+        .all()
+    )
+    costday = (
+        db.session.query(
+            func.sum(Mileage.tripprice).label("cost"), Mileage.date.label("date")
+        )
+        .filter(Mileage.userid == current_user.id)
+        .group_by(Mileage.date)
+        .all()
+    )
+
+    facilities = (
+        db.session.query(Facility).filter(Facility.userid == current_user.id).all()
+    )
+    providers = db.session.query(Doctor).filter(Doctor.userid == current_user.id).all()
+    catagories = (
+        db.session.query(Mileage_catagory)
+        .filter(Mileage_catagory.userid == current_user.id)
+        .all()
+    )
+    totalcost = calctotalcost()
+
+    content = {
+        "mileages": mileages,
+        "facilities": facilities,
+        "providers": providers,
+        "catagories": catagories,
+        "totalcost": totalcost,
+        "costday": costday,
+    }
     return render_template("mileage/mileage_report.html", **content)
+
+
+@mileage.route("/updatecost/")
+def updatecosting():
+    updatecost()
+    return redirect(url_for("mileage.mileageHome"))
+
 
 @mileage.context_processor
 def inject_today_date():
-    return {'today_date': datetime.datetime.now()}
+    return {"today_date": datetime.datetime.now()}

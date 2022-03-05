@@ -1,5 +1,5 @@
 from enum import unique
-
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from website import db
 
@@ -657,7 +657,7 @@ class Recalls(db.Model):
 
 
 # Mileage
-class MileageCatagory(db.Model):
+class Mileage_catagory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     catagoryname = db.Column(db.Text)
     description = db.Column(db.Text)
@@ -668,6 +668,7 @@ class MileageCatagory(db.Model):
         db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
     )
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    miles = db.relationship('Mileage', backref='mileage_catagory') 
 
 
 class Mileage(db.Model):
@@ -682,7 +683,7 @@ class Mileage(db.Model):
     tripnumber = db.Column(db.Text)
     date = db.Column(db.Date)
     time = db.Column(db.Time)
-    catagoryfk = db.Column(db.Integer)
+    catagoryfk = db.Column(db.Integer, ForeignKey('mileage_catagory.id'))
     threeway = db.Column(db.Boolean)
     returnleg = db.Column(db.Boolean)
     tripprice = db.Column(db.Float)
@@ -703,6 +704,7 @@ class Mileage(db.Model):
         db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
     )
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    cats = db.relationship('Mileage_catagory', backref='mileage', lazy='select') 
 
 
 # Money

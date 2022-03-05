@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename = 'css/bootstrap.css')}}">
-    <title>Lob.com Sample 8.5x11 Letter</title>
+    <title>{{current_user.firstname}} {{current_user.lastname}} Mileage Report for Taxes</title>
     <style>
         *,
         *:before,
@@ -28,11 +28,6 @@
             height: 8.5in;
             size: landscape;
             counter-increment: page;
-
-            @bottom-right {
-                padding-right: 20px;
-                content: "Page "counter(page);
-            }
         }
 
         .page-content {
@@ -41,8 +36,6 @@
             height: 8.125in;
             left: 0.1875in;
             top: 0.1875in;
-            < !-- background-color: rgba(0, 0, 0, 0.2);
-            -->
         }
     </style>
 </head>
@@ -62,7 +55,7 @@
                     {% for mileage in mileages %}
                     {% if mileage.date == date %}
                     <tr>
-                        <td width="30%">
+                        <td width="27%">
                             {% for item in facilities %}
                             {% if mileage.originfk == item.id %}
                             <b>{{item.name}}</b> <br>
@@ -80,24 +73,43 @@
                             {% endif %}
                             {% endfor %}
                         </td>
-                        <td width="25%" align="center">
+                        <td width="20%" align="center">
                             {% for item in providers %}
                             {% if mileage.providerfk == item.id %}
                             <b>{{item.fulldisplayname}}</b>
                             {% endif %}
                             {% endfor %}
                         </td>
-                        <td width="15%" align="right">
+                        <td width="20%" align="right">
                             {% for item in catagories %}
                             {% if mileage.catagoryfk == item.id %}
-                            {{ mileage.mileage}} * {{item.pricepermile}} = {{mileage.mileage * item.pricepermile}}</td>
+                            {{ mileage.mileage}} * {{"${:,.2f}".format(item.pricepermile)}} =
+                            {{"${:,.2f}".format(mileage.mileage * item.pricepermile)}}</td>
                         {% endif %}
                         {% endfor %}
                     </tr>
                     {% endif %}
                     {% endfor %}
+                    <tr>
+                        <td style="font-size:medium;" align="right" colspan="4">
+                            {% for day in costday %}
+                            {% if day.date == date %}
+                            Total for {{date.strftime("%m/%d/%y")}} {{ "${:,.2f}".format(day.cost) }}
+                            {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
                 </table>
                 {% endfor %}
+                <table class="table">
+                    <tr>
+                        <td width="30%"></td>
+                        <td width="30%"></td>
+                        <td width="25%" align="center"></td>
+                        <td style="font-size: larger;" width="15%" align="right">Total
+                            {{ "${:,.2f}".format(totalcost) }}</td>
+                    </tr>
+                </table>
             </div>
         </div>
 </body>
