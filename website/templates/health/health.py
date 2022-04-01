@@ -299,7 +299,7 @@ def medications_reorder():
     pharmacy = db.session.query(Facility).filter(Facility.userid == flask_login.current_user.id).filter(Facility.type == "Pharmacy").all()
     doctors = db.session.query(Doctor).filter(Doctor.userid == flask_login.current_user.id).all()
     facilities = db.session.query(Facility).filter(Facility.userid == flask_login.current_user.id).all()
-    medications = db.session.query(Medications).filter(Medications.userid == flask_login.current_user.id).order_by(Medications.next_refill, Medications.name).all()
+    medications = db.session.query(Medications).filter(Medications.userid == flask_login.current_user.id).filter(Medications.active==True).order_by(Medications.next_refill, Medications.name).all()
     return render_template("health/medications_reorder.html", user=User, facilities=facilities, doctors=doctors, pharmacy=pharmacy, medications=medications, ref=referrer)
 
 @health.route("/cpap", methods=['GET','POST'])
