@@ -1,4 +1,5 @@
 {% extends "productivity/prod-div.html" %}
+{% from "_utilities.html" import render_field_sm, render_submit %}
 
 {% block title %}
 {% endblock %}
@@ -10,4 +11,8 @@
 {% endblock %}
 
 {% block content %}
+<div>
+    {{render_field_sm(form.project_name)}}
+    {{render_field_sm(form.project_description)}}
+</div>
 {% endblock %}

@@ -289,9 +289,6 @@ class A1C(db.Model):
     )
 
 
-# Productivity
-
-
 class Wifi(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     SSID = db.Column(db.String(100))
@@ -616,7 +613,7 @@ class Mileage_catagory(db.Model):
         db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
     )
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
-    miles = db.relationship('Mileage', backref='mileage_catagory') 
+    miles = db.relationship("Mileage", backref="mileage_catagory")
 
 
 class Mileage(db.Model):
@@ -631,7 +628,7 @@ class Mileage(db.Model):
     tripnumber = db.Column(db.Text)
     date = db.Column(db.Date)
     time = db.Column(db.Time)
-    catagoryfk = db.Column(db.Integer, ForeignKey('mileage_catagory.id'))
+    catagoryfk = db.Column(db.Integer, ForeignKey("mileage_catagory.id"))
     threeway = db.Column(db.Boolean)
     returnleg = db.Column(db.Boolean)
     tripprice = db.Column(db.Float)
@@ -652,7 +649,7 @@ class Mileage(db.Model):
         db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
     )
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
-    cats = db.relationship('Mileage_catagory', backref='mileage', lazy='select') 
+    cats = db.relationship("Mileage_catagory", backref="mileage", lazy="select")
 
 
 # Money
@@ -780,6 +777,53 @@ class CalHolidays(db.Model):
     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
 
 
+# Productivity
+class Projects(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    project_name = db.Column(db.String(100))
+    project_description = db.Column(db.Text)
+    review_howOften = db.Column(db.Integer)
+    userid = db.Column(db.Integer)
+    update_time = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
+    )
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    # Relationships
+    tasks_rel = db.relationship("Tasks", backref="projects", lazy=True)
+    # Forign Keys
+
+
+class Goals(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    goal = db.Column(db.String(100))
+    goal_description = db.Column(db.Text)
+    userid = db.Column(db.Integer)
+    update_time = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
+    )
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    # Relationships
+    tasks_rel = db.relationship("Tasks", backref="goals", lazy=True)
+    # Forign Keys
+
+
+class Tasks(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    task = db.Column(db.String(100))
+    done = db.Column(db.Boolean, default=False)
+    userid = db.Column(db.Integer)
+    update_time = db.Column(
+        db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now
+    )
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    # Forign Keys
+    projectfk = db.Column(db.Integer, db.ForeignKey("projects.id"))
+    goalfk = db.Column(db.Integer, db.ForeignKey("goals.id"))
+    # Relationships
+    project_rel = db.relationship("Projects", backref="tasks", lazy=True)
+    goal_rel = db.relationship("Goals", backref="tasks", lazy=True)
+
+
 # Template
 # class <ModelName>(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
@@ -787,3 +831,5 @@ class CalHolidays(db.Model):
 #     userid = db.Column(db.Integer)
 #     update_time = db. Column (db. DateTime, default=datetime.datetime.now,onupdate=datetime.datetime.now)
 #     date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+#     # Relationships
+#     #Forign Keys

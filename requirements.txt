@@ -16,3 +16,6 @@ SQLAlchemy
 wifi-qrcode-generator
 pdfkit
 Werkzeug~=2.0.0
+WTForms-SQLAlchemy
+Flask-WTF
+email_validator

@@ -11,5 +11,10 @@ prod = Blueprint("prod", __name__)
 @prod.route("/", methods=["GET", "POST"])
 @login_required
 def productivity():
-    return render_template("productivity/productivity.html", user=User)
+    from website.templates.productivity.productivity_forms import Project_Form
+    
+    form = Project_Form()
+    
+    query = db.engine.execute('select * from task_log')
+    return render_template("productivity/productivity.html", user=User, query=query, form=form)
 
